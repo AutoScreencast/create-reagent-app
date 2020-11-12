@@ -1,10 +1,10 @@
 {
   "name": "create-reagent-app",
-	"description": "Bootstrap a ClojureScript frontend app that uses Reagent for the UI and Shadow-CLJS as its build tool.",
+	"description": "Bootstrap a ClojureScript frontend app that uses Reagent for the user interface and Shadow-CLJS as its build tool / compiler.",
 	"keywords": ["ClojureScript", "CLJS", "Reagent", "React", "Shadow-CLJS", "SPA", "Frontend", "Webapp"],
 	"license" : "MIT",
   "homepage": "https://github.com/AutoScreencast/create-reagent-app#readme",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": false,
   "scripts": {
     "start": "shadow-cljs watch app",
