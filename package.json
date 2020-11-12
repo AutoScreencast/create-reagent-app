@@ -13,13 +13,14 @@
   ],
   "license": "MIT",
   "homepage": "https://github.com/AutoScreencast/create-reagent-app#readme",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": false,
   "scripts": {
     "start": "shadow-cljs watch app",
     "build": "shadow-cljs release app",
     "report": "shadow-cljs run shadow.cljs.build-report app report.html",
-    "serve": "serve --single public --listen 5000"
+    "serve": "serve --single public --listen 5000",
+    "clean": "rimraf public/js"
   },
   "devDependencies": {
     "serve": "^11.3.2",
@@ -27,6 +28,7 @@
   },
   "dependencies": {
     "react": "16.13.0",
-    "react-dom": "16.13.0"
+    "react-dom": "16.13.0",
+    "rimraf": "^3.0.2"
   }
 }

@@ -134,3 +134,19 @@ yarn serve
 ```
 npm run serve
 ```
+
+### Remove Generated JS Code
+
+Remove (“clean”) the `public/js` folder and contents generated during compilation.
+
+#### Yarn
+
+```
+yarn clean
+```
+
+#### npm
+
+```
+npm run clean
+```
