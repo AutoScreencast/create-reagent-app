@@ -135,9 +135,32 @@ yarn serve
 npm run serve
 ```
 
-### Remove Generated JS Code
+### Remove Generated JS Code (“Clean”)
 
 Remove (“clean”) the `public/js` folder and contents generated during compilation.
+
+#### Yarn
+
+```
+yarn clean
+```
+
+#### npm
+
+```
+npm run clean
+```
+
+### Remove All Generated Code and Dependencies (“Nuke”)
+
+Remove all (“nuke”) of the following:
+
+- `public/js` folder and contents
+- `.shadow-cljs` folder and contents
+- `node_modules` folder and contents
+- `yarn.lock` or `package-lock.json` file
+
+Note that you will need to run `yarn install` or `npm install` again before starting the app.
 
 #### Yarn
 
