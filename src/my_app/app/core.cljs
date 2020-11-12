@@ -25,7 +25,7 @@
    [:span {:style {:font-weight "bolder"}} "not"] " be edited directly."])
 
 (defn app []
-  [:div.header  ;; .header is shorthand for {:class "header"}
+  [:div.wrapper  ;; wrapper is shorthand for {:class "wrapper"}
    [header]
    [description]
    [aside]])
