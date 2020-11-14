@@ -48,19 +48,19 @@ Note: This step creates a `node_modules` folder with all the dependencies in you
 
 #### Yarn
 
-Note: Creates a `yarn.lock` file in your project folder.
-
 ```
 yarn install
 ```
 
-#### npm
+Note: Creates a `yarn.lock` file in your project folder.
 
-Note: Creates a `package-lock.json` file in your project folder.
+#### npm
 
 ```
 npm install
 ```
+
+Note: Creates a `package-lock.json` file in your project folder.
 
 ---
 
@@ -70,8 +70,6 @@ npm install
 
 This will compile the app in development mode, and watch for any changes in your code.
 Open [http://localhost:3000](http://localhost:3000) to view the app in the browser.
-
-This operation creates a `.shadow-cljs` folder in your project folder.
 
 #### Yarn
 
@@ -85,11 +83,11 @@ yarn start
 npm start
 ```
 
+This operation creates a `.shadow-cljs` folder in your project folder.
+
 ### Build Release Version of App
 
-This will compile the app in production mode. The finished build will be in the `public` folder, which can be deployed.
-
-This operation creates a `.shadow-cljs` folder in your project folder.
+This compiles the app in production mode. The finished build will be in the `public` folder, which can be deployed.
 
 #### Yarn
 
@@ -103,9 +101,11 @@ yarn build
 npm run build
 ```
 
+This operation creates a `.shadow-cljs` folder in your project folder.
+
 ### Show Detailed Build Report of Release Version of App
 
-A detailed build report will show in your CLI, and also creates a `report.html` page in your project folder.
+A detailed build report will be shown in your CLI, and a `report.html` page will be created in your project folder.
 
 #### Yarn
 
@@ -160,16 +160,16 @@ Remove all (“nuke”) of the following:
 - `node_modules` folder and contents
 - `yarn.lock` or `package-lock.json` file
 
-Note that you will need to run `yarn install` or `npm install` again before starting the app.
-
 #### Yarn
 
 ```
-yarn clean
+yarn nuke
 ```
 
 #### npm
 
 ```
-npm run clean
+npm run nuke
 ```
+
+Note that after this operation you will need to run `yarn install` or `npm install` again before starting the app, to re-install the dependencies.

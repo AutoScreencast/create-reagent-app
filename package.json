@@ -13,7 +13,7 @@
   ],
   "license": "MIT",
   "homepage": "https://github.com/AutoScreencast/create-reagent-app#readme",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "private": false,
   "scripts": {
     "start": "shadow-cljs watch app",
@@ -21,7 +21,7 @@
     "report": "shadow-cljs run shadow.cljs.build-report app report.html",
     "serve": "serve --single public --listen 5000",
     "clean": "rimraf public/js",
-    "nuke": "rimraf public/js .shadow-cljs node_modules yarn.lock"
+    "nuke": "rimraf public/js .shadow-cljs node_modules yarn.lock package-lock.json"
   },
   "devDependencies": {
     "rimraf": "^3.0.2",
