@@ -19,7 +19,13 @@
     "start": "shadow-cljs watch app",
     "build": "shadow-cljs release app",
     "report": "shadow-cljs run shadow.cljs.build-report app report.html",
+    "check-build": "shadow-cljs check app",
+    "debug-build": "shadow-cljs release app --debug",
     "serve": "serve --single public --listen 5000",
+    "dev-build": "shadow-cljs compile app",
+    "repl": "shadow-cljs cljs-repl app",
+    "browser-repl": "shadow-cljs browser-repl",
+    "clojure-repl": "shadow-cljs clj-repl",
     "clean": "rimraf public/js",
     "nuke": "rimraf public/js .shadow-cljs node_modules yarn.lock package-lock.json"
   },
