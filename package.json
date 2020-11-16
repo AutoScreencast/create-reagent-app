@@ -13,7 +13,7 @@
   ],
   "license": "MIT",
   "homepage": "https://github.com/AutoScreencast/create-reagent-app#readme",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "private": false,
   "scripts": {
     "start": "shadow-cljs watch app",
