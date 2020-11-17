@@ -1,5 +1,5 @@
 {
-  "name": "cli-tool-test",
+  "name": "create-reagent-app",
   "description": "Bootstrap a ClojureScript frontend app that uses Reagent for the user interface and Shadow-CLJS as its build tool / compiler.",
   "keywords": [
     "ClojureScript",
@@ -13,7 +13,7 @@
   ],
   "license": "MIT",
   "homepage": "https://github.com/AutoScreencast/create-reagent-app#readme",
-  "version": "0.0.24",
+  "version": "0.0.10",
   "private": false,
   "bin": {
     "cli-tool-test": "bin/index.js"
