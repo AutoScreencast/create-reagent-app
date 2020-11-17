@@ -13,7 +13,7 @@
   ],
   "license": "MIT",
   "homepage": "https://github.com/AutoScreencast/create-reagent-app#readme",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "private": false,
   "bin": {
     "cli-tool-test": "bin/index.js"
@@ -21,14 +21,13 @@
   "scripts": {
     "start": "shadow-cljs watch script",
     "build": "shadow-cljs release script",
-    "report": "shadow-cljs run shadow.cljs.build-report script report.html",
     "debug-build": "shadow-cljs release script --debug",
     "dev-build": "shadow-cljs compile script",
     "repl": "shadow-cljs cljs-repl script",
     "node-repl": "shadow-cljs node-repl",
     "clojure-repl": "shadow-cljs clj-repl",
-    "clean": "rimraf public/js",
-    "nuke": "rimraf public/js .shadow-cljs node_modules yarn.lock package-lock.json",
+    "clean": "rimraf bin",
+    "nuke": "rimraf bin .shadow-cljs node_modules yarn.lock",
     "shadow-cljs-server": "shadow-cljs server"
   },
   "dependencies": {
