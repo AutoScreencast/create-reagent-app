@@ -20,7 +20,9 @@
 
 (println (str "cwd:" CWD))
 
-(println "create-reagent-app version: 0.0.25")
+(println (str "__dirname:" js/__dirname))
+
+(println "create-reagent-app version: 0.0.26")
 
 ;; Constant filepaths
 
@@ -101,7 +103,7 @@
 ;; FIXME: Not making any allowances for anything going wrong...
 (defn output! []
   (println "")
-  (println "================================== CREATE REAGENT APP v0.0.25 ==================================")
+  (println "================================== CREATE REAGENT APP v0.0.26 ==================================")
   (println (str "Your app `" user-project-name "` was successfully created. Please do the following 4 steps:"))
   (println (str "1. Please change into the project folder: `cd " user-project-name "`"))
   (println "2. Then, install the package dependencies using npm or yarn: `npm install` or `yarn install`")
