@@ -1,4 +1,4 @@
-(ns my-app.app.core
+(ns *|USER-PROJECT-NAME|*.app.core
   (:require [reagent.core :as r]
             [reagent.dom :as rdom]))
 

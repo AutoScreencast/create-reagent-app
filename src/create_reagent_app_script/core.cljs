@@ -1,12 +1,20 @@
 (ns create-reagent-app-script.core
   (:require [clojure.string :as str]
-            [fs :refer [existsSync mkdirSync appendFileSync]]
-            [create-reagent-app-script.contents :as contents]))
+            [cljs-node-io.core :refer [slurp]]
+            [fs :refer [existsSync mkdirSync appendFileSync]]))
 
+;; Constant filepaths
+(def FILEPATH_BASIC_TEMPLATE_SHADOW_CLJS_EDN          "./templates/basic/shadow-cljs.edn")
+(def FILEPATH_BASIC_TEMPLATE_PACKAGE_JSON             "./templates/basic/package.json")
+(def FILEPATH_BASIC_TEMPLATE_DOT_GITIGNORE            "./templates/basic/.gitignore")
+(def FILEPATH_BASIC_TEMPLATE_PUBLIC_INDEX_HTML        "./templates/basic/public/index.html")
+(def FILEPATH_BASIC_TEMPLATE_PUBLIC_CSS_STYLE_CSS     "./templates/basic/public/css/style.css")
+(def FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_CORE_CLJS "./templates/basic/src/my_app/app/core.cljs")
+
+;; Get imput command line arguments from Node process
 (def arguments (js->clj js/process.argv))
 
-;; `npx create-react-app my-app --re-frame` will give us
-;; options of [my-app --re-frame]
+;; `npx create-react-app my-app --re-frame` will give us options of [my-app --re-frame]
 (def options (subvec arguments 2))
 
 (def user-project-name (str (first options)))
@@ -30,17 +38,17 @@
 ;; Create `shadow-cljs.edn` file and its contents
 (append-contents-to-file!
  (str "./" user-project-name "/shadow-cljs.edn")
- (contents/shadow-cljs-edn-file-contents user-project-name))
+ (str/replace (slurp FILEPATH_BASIC_TEMPLATE_SHADOW_CLJS_EDN) "*|USER-PROJECT-NAME|*" user-project-name))
 
 ;; Create `package.json` file and its contents
 (append-contents-to-file!
  (str "./" user-project-name "/package.json")
- (contents/package-json-file-contents user-project-name))
+ (str/replace (slurp FILEPATH_BASIC_TEMPLATE_PACKAGE_JSON) "*|USER-PROJECT-NAME|*" user-project-name))
 
 ;; Create `.gitignore` file and its contents
 (append-contents-to-file!
  (str "./" user-project-name "/.gitignore")
- (contents/gitignore-file-contents))
+ (slurp FILEPATH_BASIC_TEMPLATE_DOT_GITIGNORE))
 
 ;; Create `public` folder
 (maybe-create-folder! (str user-project-name "/public"))
@@ -48,7 +56,7 @@
 ;; Create `index.html` file
 (append-contents-to-file!
  (str "./" user-project-name "/public/index.html")
- (contents/index-html-contents))
+ (slurp FILEPATH_BASIC_TEMPLATE_PUBLIC_INDEX_HTML))
 
 ;; Create `css` folder under `public`
 (maybe-create-folder! (str user-project-name "/public/css"))
@@ -56,7 +64,7 @@
 ;; Create `style.css` file
 (append-contents-to-file!
  (str "./" user-project-name "/public/css/style.css")
- (contents/style-css-contents))
+ (slurp FILEPATH_BASIC_TEMPLATE_PUBLIC_CSS_STYLE_CSS))
 
 ;; Create `src` folder
 (maybe-create-folder! (str user-project-name "/src"))
@@ -78,10 +86,11 @@
       "/src/"
       (replace-hyphens-with-underscores user-project-name)
       "/app/core.cljs")
- (contents/core-cljs-contents user-project-name))
+ (str/replace (slurp FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_CORE_CLJS) "*|USER-PROJECT-NAME|*" user-project-name))
 
 ;; --- Run ---
 
+;; FIXME: Not making any allowances for anything going wrong...
 (defn output! []
   (println "====================================== CREATE REAGENT APP ======================================")
   (println (str "Your app `" user-project-name "` was successfully created. Please do the following 4 steps:"))

@@ -1,5 +1,5 @@
 {:source-paths ["src"]
- :dependencies []
+ :dependencies [[cljs-node-io "1.1.2"]]
  :builds {:script {:target :node-script
                    :output-to "bin/index.js"
                    :main create-reagent-app-script.core/main}}}
