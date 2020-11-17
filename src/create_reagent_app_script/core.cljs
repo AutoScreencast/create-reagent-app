@@ -20,18 +20,27 @@
 
 (println (str "cwd:" CWD))
 
-(println (str "__dirname:" js/__dirname))
+(def DIRNAME js/__dirname)
 
-(println "create-reagent-app version: 0.0.27")
+;; __dirname:/Users/username/.npm/_npx/ddddd..dd/node_modules/create-reagent-app/bin
+(println (str "__dirname:" DIRNAME))
+
+;; Remove the final "/bin" from the DIRNAME
+(def BASE_FOLDER (str/replace DIRNAME #"/bin$" ""))
+
+;; Should be "/Users/username/.npm/_npx/ddddd..dd/node_modules/create-reagent-app"
+(println (str "BASE_FOLDER:" BASE_FOLDER))
+
+(println "create-reagent-app version: 0.0.28")
 
 ;; Constant filepaths
 
-(def FILEPATH_BASIC_TEMPLATE_SHADOW_CLJS_EDN          "../templates/basic/shadow-cljs.edn")
-(def FILEPATH_BASIC_TEMPLATE_PACKAGE_JSON             "../templates/basic/package.json")
-(def FILEPATH_BASIC_TEMPLATE_DOT_GITIGNORE            "../templates/basic/.gitignore")
-(def FILEPATH_BASIC_TEMPLATE_PUBLIC_INDEX_HTML        "../templates/basic/public/index.html")
-(def FILEPATH_BASIC_TEMPLATE_PUBLIC_CSS_STYLE_CSS     "../templates/basic/public/css/style.css")
-(def FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_CORE_CLJS "../templates/basic/src/my_app/app/core.cljs")
+(def FILEPATH_BASIC_TEMPLATE_SHADOW_CLJS_EDN          (str BASE_FOLDER "/templates/basic/shadow-cljs.edn"))
+(def FILEPATH_BASIC_TEMPLATE_PACKAGE_JSON             (str BASE_FOLDER "/templates/basic/package.json"))
+(def FILEPATH_BASIC_TEMPLATE_DOT_GITIGNORE            (str BASE_FOLDER "/templates/basic/.gitignore"))
+(def FILEPATH_BASIC_TEMPLATE_PUBLIC_INDEX_HTML        (str BASE_FOLDER "/templates/basic/public/index.html"))
+(def FILEPATH_BASIC_TEMPLATE_PUBLIC_CSS_STYLE_CSS     (str BASE_FOLDER "/templates/basic/public/css/style.css"))
+(def FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_CORE_CLJS (str BASE_FOLDER "/templates/basic/src/my_app/app/core.cljs"))
 
 ;; Utility Functions
 
@@ -103,7 +112,7 @@
 ;; FIXME: Not making any allowances for anything going wrong...
 (defn output! []
   (println "")
-  (println "================================== CREATE REAGENT APP v0.0.27 ==================================")
+  (println "================================== CREATE REAGENT APP v0.0.28 ==================================")
   (println (str "Your app `" user-project-name "` was successfully created. Please do the following 4 steps:"))
   (println (str "1. Please change into the project folder: `cd " user-project-name "`"))
   (println "2. Then, install the package dependencies using npm or yarn: `npm install` or `yarn install`")
