@@ -1,20 +1,7 @@
 {
-  "name": "create-reagent-app",
-  "description": "Bootstrap a ClojureScript frontend app that uses Reagent for the user interface and Shadow-CLJS as its build tool / compiler.",
-  "keywords": [
-    "ClojureScript",
-    "CLJS",
-    "Reagent",
-    "React",
-    "Shadow-CLJS",
-    "SPA",
-    "Frontend",
-    "Webapp"
-  ],
-  "license": "MIT",
-  "homepage": "https://github.com/AutoScreencast/create-reagent-app#readme",
-  "version": "0.0.9",
-  "private": false,
+  "name": "my-app",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
     "start": "shadow-cljs watch app",
     "build": "shadow-cljs release app",
@@ -26,7 +13,10 @@
     "browser-repl": "shadow-cljs browser-repl",
     "clojure-repl": "shadow-cljs clj-repl",
     "clean": "rimraf public/js",
-    "nuke": "rimraf public/js .shadow-cljs node_modules yarn.lock package-lock.json"
+    "nuke": "rimraf public/js .shadow-cljs node_modules yarn.lock package-lock.json",
+    "server-start": "shadow-cljs start",
+    "server-stop": "shadow-cljs stop",
+    "server-restart": "shadow-cljs restart"
   },
   "devDependencies": {
     "rimraf": "^3.0.2",

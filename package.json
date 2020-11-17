@@ -13,13 +13,12 @@
   ],
   "license": "MIT",
   "homepage": "https://github.com/AutoScreencast/create-reagent-app#readme",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "private": false,
   "bin": {
     "cli-tool-test": "bin/index.js"
   },
   "scripts": {
-    "execute": "node bin/index.js my-app",
     "start": "shadow-cljs watch script",
     "build": "shadow-cljs release script",
     "report": "shadow-cljs run shadow.cljs.build-report script report.html",

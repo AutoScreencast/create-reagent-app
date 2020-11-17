@@ -22,8 +22,6 @@
 (defn replace-hyphens-with-underscores [folder-name]
   (str/replace folder-name \- \_))
 
-
-
 (defn append-contents-to-file! [filepath contents]
   (fs/appendFileSync filepath contents))
 
@@ -40,7 +38,7 @@
 ;; Create `package.json` file and its contents
 (append-contents-to-file!
  (str "./" user-project-name "/package.json")
- (contents/package-json-file-contents user-project-name package-version))
+ (contents/package-json-file-contents user-project-name))
 
 ;; Create `.gitignore` file and its contents
 (append-contents-to-file!

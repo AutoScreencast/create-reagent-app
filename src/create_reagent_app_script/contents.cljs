@@ -11,45 +11,35 @@
 "))
 
 ;; `version` looks like this: "0.1.4" (as a quoted string)
-(defn package-json-file-contents [user-project-name version]
+(defn package-json-file-contents [user-project-name]
   (str "{
-  \"name\": \"create-reagent-app\",
-  \"description\": \"Bootstrap a ClojureScript frontend app that uses Reagent for the user interface and Shadow-CLJS as its build tool / compiler.\",
-  \"keywords\": [
-    \"ClojureScript\",
-    \"CLJS\",
-    \"Reagent\",
-    \"React\",
-    \"Shadow-CLJS\",
-    \"SPA\",
-    \"Frontend\",
-    \"Webapp\"
-  ],
-  \"license\": \"MIT\",
-  \"homepage\": \"https://github.com/AutoScreencast/create-reagent-app#readme\",
-  \"version\": " \"version \" ",
-  \"private\": false,
-  \"bin\": {
-    \"create-reagent-app\": \"bin/index.js\"
-  },
+  \"name\": \" " user-project-name "\",
+  \"version\": \"0.1.0\",
+  \"private\": true,
   \"scripts\": {
-    \"execute\": \"node bin/index.js " user-project-name \" ",
-    \"start\": \"shadow-cljs watch script\",
-    \"build\": \"shadow-cljs release script\",
-    \"report\": \"shadow-cljs run shadow.cljs.build-report script report.html\",
-    \"debug-build\": \"shadow-cljs release script --debug\",
-    \"dev-build\": \"shadow-cljs compile script\",
-    \"repl\": \"shadow-cljs cljs-repl script\",
-    \"node-repl\": \"shadow-cljs node-repl\",
+    \"start\": \"shadow-cljs watch app\",
+    \"build\": \"shadow-cljs release app\",
+    \"report\": \"shadow-cljs run shadow.cljs.build-report app report.html\",
+    \"debug-build\": \"shadow-cljs release app --debug\",
+    \"serve\": \"serve --single public --listen 5000\",
+    \"dev-build\": \"shadow-cljs compile app\",
+    \"repl\": \"shadow-cljs cljs-repl app\",
+    \"browser-repl\": \"shadow-cljs browser-repl\",
     \"clojure-repl\": \"shadow-cljs clj-repl\",
     \"clean\": \"rimraf public/js\",
-    \"nuke\": \"rimraf public/js .shadow-cljs node_modules yarn.lock package-lock.json\"
+    \"nuke\": \"rimraf public/js .shadow-cljs node_modules yarn.lock package-lock.json\",
+    \"server-start\": \"shadow-cljs start\",
+    \"server-stop\": \"shadow-cljs stop\",
+    \"server-restart\": \"shadow-cljs restart\"
+  },
+  \"devDependencies\": {
+    \"rimraf\": \"^3.0.2\",
+    \"serve\": \"^11.3.2\",
+    \"shadow-cljs\": \"2.11.7\"
   },
   \"dependencies\": {
-    \"fs-extra\": \"^9.0.1\",
-    \"rimraf\": \"^3.0.2\",
-    \"shadow-cljs\": \"2.11.7\",
-    \"source-map-support\": \"^0.5.19\"
+    \"react\": \"16.13.0\",
+    \"react-dom\": \"16.13.0\"
   }
 }
 "))
