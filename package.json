@@ -13,10 +13,16 @@
   ],
   "license": "MIT",
   "homepage": "https://github.com/AutoScreencast/create-reagent-app#readme",
-  "version": "0.0.19",
+  "version": "0.0.24",
   "private": false,
   "bin": {
-    "cli-tool-test": "bin/index.js"
+    "create-reagent-app": "bin/index.js"
+  },
+  "files": [
+    "./templates/basic/"
+  ],
+  "engines": {
+    "node": ">=10"
   },
   "scripts": {
     "start": "shadow-cljs watch script",
