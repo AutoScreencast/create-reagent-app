@@ -22,16 +22,16 @@
 
 (println (str "__dirname:" js/__dirname))
 
-(println "create-reagent-app version: 0.0.26")
+(println "create-reagent-app version: 0.0.27")
 
 ;; Constant filepaths
 
-(def FILEPATH_BASIC_TEMPLATE_SHADOW_CLJS_EDN          (str CWD "/templates/basic/shadow-cljs.edn"))
-(def FILEPATH_BASIC_TEMPLATE_PACKAGE_JSON             (str CWD "/templates/basic/package.json"))
-(def FILEPATH_BASIC_TEMPLATE_DOT_GITIGNORE            (str CWD "/templates/basic/.gitignore"))
-(def FILEPATH_BASIC_TEMPLATE_PUBLIC_INDEX_HTML        (str CWD "/templates/basic/public/index.html"))
-(def FILEPATH_BASIC_TEMPLATE_PUBLIC_CSS_STYLE_CSS     (str CWD "/templates/basic/public/css/style.css"))
-(def FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_CORE_CLJS (str CWD "/templates/basic/src/my_app/app/core.cljs"))
+(def FILEPATH_BASIC_TEMPLATE_SHADOW_CLJS_EDN          "../templates/basic/shadow-cljs.edn")
+(def FILEPATH_BASIC_TEMPLATE_PACKAGE_JSON             "../templates/basic/package.json")
+(def FILEPATH_BASIC_TEMPLATE_DOT_GITIGNORE            "../templates/basic/.gitignore")
+(def FILEPATH_BASIC_TEMPLATE_PUBLIC_INDEX_HTML        "../templates/basic/public/index.html")
+(def FILEPATH_BASIC_TEMPLATE_PUBLIC_CSS_STYLE_CSS     "../templates/basic/public/css/style.css")
+(def FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_CORE_CLJS "../templates/basic/src/my_app/app/core.cljs")
 
 ;; Utility Functions
 
@@ -103,7 +103,7 @@
 ;; FIXME: Not making any allowances for anything going wrong...
 (defn output! []
   (println "")
-  (println "================================== CREATE REAGENT APP v0.0.26 ==================================")
+  (println "================================== CREATE REAGENT APP v0.0.27 ==================================")
   (println (str "Your app `" user-project-name "` was successfully created. Please do the following 4 steps:"))
   (println (str "1. Please change into the project folder: `cd " user-project-name "`"))
   (println "2. Then, install the package dependencies using npm or yarn: `npm install` or `yarn install`")
