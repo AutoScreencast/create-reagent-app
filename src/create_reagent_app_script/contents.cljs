@@ -10,7 +10,6 @@
                 :modules {:main {:init-fn " user-project-name ".app.core/main}}}}}
 "))
 
-;; `version` looks like this: "0.1.4" (as a quoted string)
 (defn package-json-file-contents [user-project-name]
   (str "{
   \"name\": \" " user-project-name "\",

@@ -3,9 +3,6 @@
             ["fs-extra" :as fs]
             [create-reagent-app-script.contents :as contents]))
 
-;; latest package version, in `package.json`
-(def package-version "0.0.25")
-
 (def arguments (js->clj js/process.argv))
 
 ;; `npx create-react-app my-app --re-frame` will give us
