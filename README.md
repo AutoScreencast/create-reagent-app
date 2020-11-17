@@ -74,7 +74,9 @@ npm start
 
 Then open http://localhost:3000/ in your browser to see your app.
 
-> This approach to scaffolding an app was heavily inspired by [create-react-app](https://create-react-app.dev/), a very popular way to get started with a ReactJS app in the JavaScript community.
+> Note: This approach to scaffolding an app was heavily inspired by [create-react-app](https://create-react-app.dev/), a very popular way to get started with a ReactJS app in the JavaScript community.
+
+> Note also: Unlike the setup created by _create-react-app_, your project is not automatically initialized as a Git repo. However, a `.gitignore` file is included. Please run `git init` to create a Git repo in your project folder.
 
 ---
 
