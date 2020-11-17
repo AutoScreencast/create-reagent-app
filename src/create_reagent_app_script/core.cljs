@@ -83,16 +83,16 @@
 ;; --- Run ---
 
 (defn output! []
-  (js/console.log "Platform:" js/process.platform)
-  (js/console.log "Node version is:" js/process.version)
-  (println arguments)
-  (println options)
-  (println user-project-name))
+  (println "=========================================================================================")
+  (println (str "Your app called " user-project-name " was successfully created. Please do the following 4 steps:"))
+  (println (str "1. Please change into the project folder: `cd " user-project-name "`"))
+  (println "2. Then, install the package dependencies using npm or yarn: `npm install` or `yarn install`")
+  (println "3. Run your app with `npm start` or `yarn start`")
+  (println "4. Open your app in the browser at `localhost:3000`")
+  (println "========================================================================================="))
 
 (defn ^:export main []
-  (println "main")
   (output!))
 
 (defn ^:dev/after-load reload! []
-  (println "reload!")
-  (output!))
+  (println "reload!"))

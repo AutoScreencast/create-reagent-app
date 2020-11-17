@@ -27,9 +27,7 @@
     \"clojure-repl\": \"shadow-cljs clj-repl\",
     \"clean\": \"rimraf public/js\",
     \"nuke\": \"rimraf public/js .shadow-cljs node_modules yarn.lock package-lock.json\",
-    \"server-start\": \"shadow-cljs start\",
-    \"server-stop\": \"shadow-cljs stop\",
-    \"server-restart\": \"shadow-cljs restart\"
+    \"shadow-cljs-server\": \"shadow-cljs server\"
   },
   \"devDependencies\": {
     \"rimraf\": \"^3.0.2\",
