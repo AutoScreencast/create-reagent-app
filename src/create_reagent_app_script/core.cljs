@@ -1,6 +1,6 @@
 (ns create-reagent-app-script.core
   (:require [clojure.string :as str]
-            ["fs-extra" :as fs]
+            [fs :refer [existsSync mkdirSync appendFileSync]]
             [create-reagent-app-script.contents :as contents]))
 
 (def arguments (js->clj js/process.argv))
@@ -12,15 +12,15 @@
 (def user-project-name (str (first options)))
 
 (defn maybe-create-folder! [folder-name]
-  (if (not (fs/existsSync folder-name))
-    (fs/mkdirSync folder-name)
+  (if (not (existsSync folder-name))
+    (mkdirSync folder-name)
     (js/console.error (str "The folder " folder-name " already exists."))))
 
 (defn replace-hyphens-with-underscores [folder-name]
   (str/replace folder-name \- \_))
 
 (defn append-contents-to-file! [filepath contents]
-  (fs/appendFileSync filepath contents))
+  (appendFileSync filepath contents))
 
 ;; --- Linear sequence of steps ---
 

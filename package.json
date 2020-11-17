@@ -13,7 +13,7 @@
   ],
   "license": "MIT",
   "homepage": "https://github.com/AutoScreencast/create-reagent-app#readme",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "private": false,
   "bin": {
     "cli-tool-test": "bin/index.js"
@@ -31,9 +31,7 @@
     "shadow-cljs-server": "shadow-cljs server"
   },
   "dependencies": {
-    "fs-extra": "^9.0.1",
     "rimraf": "^3.0.2",
-    "shadow-cljs": "2.11.7",
-    "source-map-support": "^0.5.19"
+    "shadow-cljs": "2.11.7"
   }
 }
