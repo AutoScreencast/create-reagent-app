@@ -1,7 +1,8 @@
 (ns create-reagent-app-script.core
   (:require [clojure.string :as str]
             [cljs-node-io.core :refer [slurp]]
-            [fs :refer [existsSync mkdirSync appendFileSync]]))
+            [fs :refer [existsSync mkdirSync appendFileSync]]
+            [create-reagent-app-script.contents :as contents]))
 
 
 ;; Get imput command line arguments from Node process
@@ -31,13 +32,12 @@
 ;; Should be "/Users/username/.npm/_npx/ddddd..dd/node_modules/create-reagent-app"
 (println (str "BASE_FOLDER:" BASE_FOLDER))
 
-(println "create-reagent-app version: 0.0.29")
+(println "create-reagent-app version: 0.0.30")
 
-;; Constant filepaths
+;; Constant filepaths (excluding the `.gitignore` file, which is excluded during `npm publish`)
 
 (def FILEPATH_BASIC_TEMPLATE_SHADOW_CLJS_EDN          (str BASE_FOLDER "/templates/basic/shadow-cljs.edn"))
 (def FILEPATH_BASIC_TEMPLATE_PACKAGE_JSON             (str BASE_FOLDER "/templates/basic/package.json"))
-(def FILEPATH_BASIC_TEMPLATE_DOT_GITIGNORE            (str BASE_FOLDER "/templates/basic/.gitignore"))
 (def FILEPATH_BASIC_TEMPLATE_PUBLIC_INDEX_HTML        (str BASE_FOLDER "/templates/basic/public/index.html"))
 (def FILEPATH_BASIC_TEMPLATE_PUBLIC_CSS_STYLE_CSS     (str BASE_FOLDER "/templates/basic/public/css/style.css"))
 (def FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_CORE_CLJS (str BASE_FOLDER "/templates/basic/src/my_app/app/core.cljs"))
@@ -91,10 +91,6 @@
  (str/replace (slurp FILEPATH_BASIC_TEMPLATE_PACKAGE_JSON) "*|USER-PROJECT-NAME|*" user-project-name))
 
 (append-contents-to-file!
- FILEPATH_USER_PROJECT_NAME_FOLDER_DOT_GITIGNORE
- (slurp FILEPATH_BASIC_TEMPLATE_DOT_GITIGNORE))
-
-(append-contents-to-file!
  FILEPATH_PUBLIC_FOLDER_INDEX_HTML
  (slurp FILEPATH_BASIC_TEMPLATE_PUBLIC_INDEX_HTML))
 
@@ -102,17 +98,21 @@
  FILEPATH_PUBLIC_CSS_FOLDER_STYLE_CSS
  (slurp FILEPATH_BASIC_TEMPLATE_PUBLIC_CSS_STYLE_CSS))
 
-;; Create `core.cljs` file
 (append-contents-to-file!
  FILEPATH_SRC_UPN_APP_FOLDER_CORE_CLJS
  (str/replace (slurp FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_CORE_CLJS) "*|USER-PROJECT-NAME|*" user-project-name))
+
+;; Create `.gitignore` file and its contents without slurping
+(append-contents-to-file!
+ FILEPATH_USER_PROJECT_NAME_FOLDER_DOT_GITIGNORE
+ (contents/gitignore-file-contents))
 
 ;; --- Run ---
 
 ;; FIXME: Not making any allowances for anything going wrong...
 (defn output! []
   (println "")
-  (println "================================== CREATE REAGENT APP v0.0.29 ==================================")
+  (println "================================== CREATE REAGENT APP v0.0.30 ==================================")
   (println (str "Your app `" user-project-name "` was successfully created. Please do the following 4 steps:"))
   (println (str "1. Please change into the project folder: `cd " user-project-name "`"))
   (println "2. Then, install the package dependencies using npm or yarn: `npm install` or `yarn install`")
