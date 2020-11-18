@@ -2,6 +2,7 @@
   (:require [clojure.string :as str]
             [cljs-node-io.core :refer [slurp]]
             [fs :refer [existsSync mkdirSync appendFileSync]]
+            [path]
             [create-reagent-app-script.contents :as contents]))
 
 
@@ -14,25 +15,10 @@
 ;; eg. "my-app"
 (def user-project-name (str (first options)))
 
-(println (str "user-project-name:" user-project-name))
-
-;; Current working directory - assume the process is launched from the root level of project...
-(def CWD (. js/process cwd))
-
-(println (str "cwd:" CWD))
-
-(def DIRNAME js/__dirname)
-
-;; __dirname:/Users/username/.npm/_npx/ddddd..dd/node_modules/create-reagent-app/bin
-(println (str "__dirname:" DIRNAME))
-
-;; Remove the final "/bin" from the DIRNAME
-(def BASE_FOLDER (str/replace DIRNAME #"/bin$" ""))
-
+;; __dirname: "/Users/username/.npm/_npx/ddddd..dd/node_modules/create-reagent-app/bin"
+;; Remove the final "/bin" from the __dirname
 ;; Should be "/Users/username/.npm/_npx/ddddd..dd/node_modules/create-reagent-app"
-(println (str "BASE_FOLDER:" BASE_FOLDER))
-
-(println "create-reagent-app version: 0.0.30")
+(def BASE_FOLDER (path/join js/__dirname ".."))
 
 ;; Constant filepaths (excluding the `.gitignore` file, which is excluded during `npm publish`)
 
@@ -58,12 +44,12 @@
 ;; --- Linear sequence of steps ---
 
 ;; Output folders
-(def FILEPATH_USER_PROJECT_NAME_FOLDER (str CWD "/" user-project-name))
-(def FILEPATH_PUBLIC_FOLDER            (str FILEPATH_USER_PROJECT_NAME_FOLDER "/public"))
-(def FILEPATH_PUBLIC_CSS_FOLDER        (str FILEPATH_PUBLIC_FOLDER "/css"))
-(def FILEPATH_SRC_FOLDER               (str FILEPATH_USER_PROJECT_NAME_FOLDER "/src"))
-(def FILEPATH_SRC_UPN_FOLDER           (str FILEPATH_SRC_FOLDER "/" (replace-hyphens-with-underscores user-project-name)))
-(def FILEPATH_SRC_UPN_APP_FOLDER       (str FILEPATH_SRC_UPN_FOLDER "/app"))
+(def FILEPATH_USER_PROJECT_NAME_FOLDER (path/resolve user-project-name))
+(def FILEPATH_PUBLIC_FOLDER            (path/join FILEPATH_USER_PROJECT_NAME_FOLDER "public"))
+(def FILEPATH_PUBLIC_CSS_FOLDER        (path/join FILEPATH_PUBLIC_FOLDER "css"))
+(def FILEPATH_SRC_FOLDER               (path/join FILEPATH_USER_PROJECT_NAME_FOLDER "src"))
+(def FILEPATH_SRC_UPN_FOLDER           (path/join FILEPATH_SRC_FOLDER (replace-hyphens-with-underscores user-project-name)))
+(def FILEPATH_SRC_UPN_APP_FOLDER       (path/join FILEPATH_SRC_UPN_FOLDER "app"))
 
 ;; Create folders
 (maybe-create-folder! FILEPATH_USER_PROJECT_NAME_FOLDER)
@@ -74,12 +60,12 @@
 (maybe-create-folder! FILEPATH_SRC_UPN_APP_FOLDER)
 
 ;; Output files
-(def FILEPATH_USER_PROJECT_NAME_FOLDER_SHADOW_CLJS_EDN (str FILEPATH_USER_PROJECT_NAME_FOLDER "/shadow-cljs.edn"))
-(def FILEPATH_USER_PROJECT_NAME_FOLDER_PACKAGE_JSON    (str FILEPATH_USER_PROJECT_NAME_FOLDER "/package.json"))
-(def FILEPATH_USER_PROJECT_NAME_FOLDER_DOT_GITIGNORE   (str FILEPATH_USER_PROJECT_NAME_FOLDER "/.gitignore"))
-(def FILEPATH_PUBLIC_FOLDER_INDEX_HTML                 (str FILEPATH_PUBLIC_FOLDER "/index.html"))
-(def FILEPATH_PUBLIC_CSS_FOLDER_STYLE_CSS              (str FILEPATH_PUBLIC_CSS_FOLDER "/style.css"))
-(def FILEPATH_SRC_UPN_APP_FOLDER_CORE_CLJS             (str FILEPATH_SRC_UPN_APP_FOLDER "/core.cljs"))
+(def FILEPATH_USER_PROJECT_NAME_FOLDER_SHADOW_CLJS_EDN (path/join FILEPATH_USER_PROJECT_NAME_FOLDER "shadow-cljs.edn"))
+(def FILEPATH_USER_PROJECT_NAME_FOLDER_PACKAGE_JSON    (path/join FILEPATH_USER_PROJECT_NAME_FOLDER "package.json"))
+(def FILEPATH_USER_PROJECT_NAME_FOLDER_DOT_GITIGNORE   (path/join FILEPATH_USER_PROJECT_NAME_FOLDER ".gitignore"))
+(def FILEPATH_PUBLIC_FOLDER_INDEX_HTML                 (path/join FILEPATH_PUBLIC_FOLDER "index.html"))
+(def FILEPATH_PUBLIC_CSS_FOLDER_STYLE_CSS              (path/join FILEPATH_PUBLIC_CSS_FOLDER "style.css"))
+(def FILEPATH_SRC_UPN_APP_FOLDER_CORE_CLJS             (path/join FILEPATH_SRC_UPN_APP_FOLDER "core.cljs"))
 
 ;; Create files with content
 (append-contents-to-file!
@@ -112,13 +98,13 @@
 ;; FIXME: Not making any allowances for anything going wrong...
 (defn output! []
   (println "")
-  (println "================================== CREATE REAGENT APP v0.0.30 ==================================")
-  (println (str "Your app `" user-project-name "` was successfully created. Please do the following 4 steps:"))
-  (println (str "1. Please change into the project folder: `cd " user-project-name "`"))
-  (println "2. Then, install the package dependencies using npm or yarn: `npm install` or `yarn install`")
-  (println "3. Run your app with `npm start` or `yarn start`")
-  (println "4. Open your app in the browser at `localhost:3000`")
-  (println "================================================================================================")
+  (println "=============================== CREATE REAGENT APP v0.0.33 ===============================")
+  (println (str "Your app `" user-project-name "` was successfully created. Now perform these 4 steps:"))
+  (println (str "1. Change directory into project folder: `cd " user-project-name "`"))
+  (println "2. Install dependencies using npm or yarn: `npm install` or `yarn install`")
+  (println "3. Run app with `npm start` or `yarn start`")
+  (println "4. Open your browser at `localhost:3000`")
+  (println "==========================================================================================")
   (println ""))
 
 (defn ^:export main []
