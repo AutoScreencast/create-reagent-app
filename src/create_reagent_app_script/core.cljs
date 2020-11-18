@@ -12,6 +12,12 @@
 ;; `npx create-react-app my-app --re-frame` will give us options of [my-app --re-frame]
 (def options (subvec arguments 2))
 
+;; Exit from process if options are empty
+(when (empty? options)
+  (println "THIS DID NOT WORK! PLEASE TRY AGAIN!")
+  (println "You must provide a project name: `npx create-reagent-app my-project-name`")
+  (js/process.exit 1))
+
 ;; eg. "my-app"
 (def user-project-name (str (first options)))
 
@@ -98,13 +104,15 @@
 ;; FIXME: Not making any allowances for anything going wrong...
 (defn output! []
   (println "")
-  (println "=============================== CREATE REAGENT APP v0.0.33 ===============================")
+  (println "========================== CREATE REAGENT APP v0.0.34 ==========================")
+  (println "")
   (println (str "Your app `" user-project-name "` was successfully created. Now perform these 4 steps:"))
   (println (str "1. Change directory into project folder: `cd " user-project-name "`"))
   (println "2. Install dependencies using npm or yarn: `npm install` or `yarn install`")
   (println "3. Run app with `npm start` or `yarn start`")
   (println "4. Open your browser at `localhost:3000`")
-  (println "==========================================================================================")
+  (println "")
+  (println "================================================================================")
   (println ""))
 
 (defn ^:export main []
