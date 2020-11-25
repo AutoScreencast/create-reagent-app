@@ -17,7 +17,6 @@
 (def argv-map (parse-opts (js->clj js/process.argv) cli-options))
 
 ;; Get imput command line arguments from Node process
-;; ;; `npx create-react-app my-app --re-frame` will give us user-specified-args of [my-app --re-frame]
 (def user-specified-args (subvec (:arguments argv-map) 2))
 
 ;; eg. "my-app"
@@ -32,13 +31,12 @@
 (def pm (-> argv-map :options :package-manager))
 
 ;; __dirname: "/Users/username/.npm/_npx/ddddd..dd/node_modules/create-reagent-app/bin"
-;; Remove the final "/bin" from the __dirname
-;; Should be "/Users/username/.npm/_npx/ddddd..dd/node_modules/create-reagent-app"
-(def BASE_FOLDER (path/join js/__dirname ".."))
+;; We want the subpath: "/Users/username/.npm/_npx/ddddd..dd/node_modules/create-reagent-app"
+(def orig_base_dir (path/join js/__dirname ".."))
 
 ;; Get version number
 (def cra-version-number
-  (-> BASE_FOLDER
+  (-> orig_base_dir
       (str "/package.json")
       (slurp)
       (js/JSON.parse)
@@ -78,24 +76,6 @@
        (print))
   (js/process.exit 1))
 
-;; Constant origin filepaths (excluding the `.gitignore` file, which is excluded during `npm publish`)
-
-(def FILEPATH_BASIC_TEMPLATE_SHADOW_CLJS_EDN                       (str BASE_FOLDER "/templates/basic/shadow-cljs.edn"))
-(def FILEPATH_BASIC_TEMPLATE_PACKAGE_JSON                          (str BASE_FOLDER "/templates/basic/package.json"))
-(def FILEPATH_BASIC_TEMPLATE_PUBLIC_INDEX_HTML                     (str BASE_FOLDER "/templates/basic/public/index.html"))
-(def FILEPATH_BASIC_TEMPLATE_PUBLIC_FAVICON_ICO                    (str BASE_FOLDER "/templates/basic/public/favicon.ico"))
-(def FILEPATH_BASIC_TEMPLATE_PUBLIC_LOGO_192_PNG                   (str BASE_FOLDER "/templates/basic/public/cljs_logo_192.png"))
-(def FILEPATH_BASIC_TEMPLATE_PUBLIC_LOGO_512_PNG                   (str BASE_FOLDER "/templates/basic/public/cljs_logo_512.png"))
-(def FILEPATH_BASIC_TEMPLATE_PUBLIC_MANIFEST_JSON                  (str BASE_FOLDER "/templates/basic/public/manifest.json"))
-(def FILEPATH_BASIC_TEMPLATE_PUBLIC_ROBOTS_TXT                     (str BASE_FOLDER "/templates/basic/public/robots.txt"))
-(def FILEPATH_BASIC_TEMPLATE_PUBLIC_CSS_STYLE_CSS                  (str BASE_FOLDER "/templates/basic/public/css/style.css"))
-(def FILEPATH_BASIC_TEMPLATE_PUBLIC_IMG_CLJS_SVG                   (str BASE_FOLDER "/templates/basic/public/img/cljs.svg"))
-(def FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_CORE_CLJS              (str BASE_FOLDER "/templates/basic/src/my_app/app/core.cljs"))
-(def FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_VIEWS_ASIDE_CLJS       (str BASE_FOLDER "/templates/basic/src/my_app/app/views/aside.cljs"))
-(def FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_VIEWS_COUNTER_CLJS     (str BASE_FOLDER "/templates/basic/src/my_app/app/views/counter.cljs"))
-(def FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_VIEWS_DESCRIPTION_CLJS (str BASE_FOLDER "/templates/basic/src/my_app/app/views/description.cljs"))
-(def FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_VIEWS_HEADER_CLJS      (str BASE_FOLDER "/templates/basic/src/my_app/app/views/header.cljs"))
-
 ;; Utility Functions
 
 (defn maybe-create-folder! [folder-name]
@@ -115,93 +95,83 @@
 ;; --- Linear sequence of steps ---
 
 ;; Output folders
-(def FILEPATH_USER_PROJECT_NAME_FOLDER (path/resolve user-project-name))
-(def FILEPATH_PUBLIC_FOLDER            (path/join FILEPATH_USER_PROJECT_NAME_FOLDER "public"))
-(def FILEPATH_PUBLIC_CSS_FOLDER        (path/join FILEPATH_PUBLIC_FOLDER "css"))
-(def FILEPATH_PUBLIC_IMG_FOLDER        (path/join FILEPATH_PUBLIC_FOLDER "img"))
-(def FILEPATH_SRC_FOLDER               (path/join FILEPATH_USER_PROJECT_NAME_FOLDER "src"))
-(def FILEPATH_SRC_UPN_FOLDER           (path/join FILEPATH_SRC_FOLDER (replace-hyphens-with-underscores user-project-name)))
-(def FILEPATH_SRC_UPN_APP_FOLDER       (path/join FILEPATH_SRC_UPN_FOLDER "app"))
-(def FILEPATH_SRC_UPN_APP_VIEWS_FOLDER (path/join FILEPATH_SRC_UPN_APP_FOLDER "views"))
+
+(def dest_upn_dir (path/resolve user-project-name))
+
+(def u_p_n (replace-hyphens-with-underscores user-project-name))
 
 ;; Create folders
-(defn create-folders! []
-  (maybe-create-folder! FILEPATH_USER_PROJECT_NAME_FOLDER)
-  (maybe-create-folder! FILEPATH_PUBLIC_FOLDER)
-  (maybe-create-folder! FILEPATH_PUBLIC_CSS_FOLDER)
-  (maybe-create-folder! FILEPATH_PUBLIC_IMG_FOLDER)
-  (maybe-create-folder! FILEPATH_SRC_FOLDER)
-  (maybe-create-folder! FILEPATH_SRC_UPN_FOLDER)
-  (maybe-create-folder! FILEPATH_SRC_UPN_APP_FOLDER)
-  (maybe-create-folder! FILEPATH_SRC_UPN_APP_VIEWS_FOLDER))
 
-;; Output files
-(def FILEPATH_USER_PROJECT_NAME_FOLDER_SHADOW_CLJS_EDN  (path/join FILEPATH_USER_PROJECT_NAME_FOLDER "shadow-cljs.edn"))
-(def FILEPATH_USER_PROJECT_NAME_FOLDER_PACKAGE_JSON     (path/join FILEPATH_USER_PROJECT_NAME_FOLDER "package.json"))
-(def FILEPATH_USER_PROJECT_NAME_FOLDER_DOT_GITIGNORE    (path/join FILEPATH_USER_PROJECT_NAME_FOLDER ".gitignore"))
-(def FILEPATH_PUBLIC_FOLDER_INDEX_HTML                  (path/join FILEPATH_PUBLIC_FOLDER "index.html"))
-(def FILEPATH_PUBLIC_FOLDER_FAVICON_ICO                 (path/join FILEPATH_PUBLIC_FOLDER "favicon.ico"))
-(def FILEPATH_PUBLIC_FOLDER_LOGO_192_PNG                (path/join FILEPATH_PUBLIC_FOLDER "cljs_logo_192.png"))
-(def FILEPATH_PUBLIC_FOLDER_LOGO_512_PNG                (path/join FILEPATH_PUBLIC_FOLDER "cljs_logo_512.png"))
-(def FILEPATH_PUBLIC_FOLDER_MANIFEST_JSON               (path/join FILEPATH_PUBLIC_FOLDER "manifest.json"))
-(def FILEPATH_PUBLIC_FOLDER_ROBOTS_TXT                  (path/join FILEPATH_PUBLIC_FOLDER "robots.txt"))
-(def FILEPATH_PUBLIC_CSS_FOLDER_STYLE_CSS               (path/join FILEPATH_PUBLIC_CSS_FOLDER "style.css"))
-(def FILEPATH_PUBLIC_IMG_FOLDER_CLJS_SVG                (path/join FILEPATH_PUBLIC_IMG_FOLDER "cljs.svg"))
-(def FILEPATH_SRC_UPN_APP_FOLDER_CORE_CLJS              (path/join FILEPATH_SRC_UPN_APP_FOLDER "core.cljs"))
-(def FILEPATH_SRC_UPN_APP_VIEWS_FOLDER_ASIDE_CLJS       (path/join FILEPATH_SRC_UPN_APP_VIEWS_FOLDER "aside.cljs"))
-(def FILEPATH_SRC_UPN_APP_VIEWS_FOLDER_COUNTER_CLJS     (path/join FILEPATH_SRC_UPN_APP_VIEWS_FOLDER "counter.cljs"))
-(def FILEPATH_SRC_UPN_APP_VIEWS_FOLDER_DESCRIPTION_CLJS (path/join FILEPATH_SRC_UPN_APP_VIEWS_FOLDER "description.cljs"))
-(def FILEPATH_SRC_UPN_APP_VIEWS_FOLDER_HEADER_CLJS      (path/join FILEPATH_SRC_UPN_APP_VIEWS_FOLDER "header.cljs"))
+(defn create-folders! []
+  (maybe-create-folder! dest_upn_dir)
+  (maybe-create-folder! (path/join dest_upn_dir "public"))
+  (maybe-create-folder! (path/join dest_upn_dir "public" "css"))
+  (maybe-create-folder! (path/join dest_upn_dir "public" "img"))
+  (maybe-create-folder! (path/join dest_upn_dir "src"))
+  (maybe-create-folder! (path/join dest_upn_dir "src" u_p_n))
+  (maybe-create-folder! (path/join dest_upn_dir "src" u_p_n "app"))
+  (maybe-create-folder! (path/join dest_upn_dir "src" u_p_n "app" "views")))
+
+;; Origin filepath
+
+(def basic_template_dir  (path/join orig_base_dir "templates" "basic"))
 
 ;; Create or copy files with content
+
 (defn create-files-with-content! []
-  (append-contents-to-file!
-   FILEPATH_USER_PROJECT_NAME_FOLDER_SHADOW_CLJS_EDN
-   (str/replace (slurp FILEPATH_BASIC_TEMPLATE_SHADOW_CLJS_EDN) "*|USER-PROJECT-NAME|*" user-project-name))
+  (append-contents-to-file! (path/join dest_upn_dir "shadow-cljs.edn")
+                            (str/replace (slurp (path/join basic_template_dir "shadow-cljs.edn")) "*|USER-PROJECT-NAME|*" user-project-name))
 
-  (append-contents-to-file!
-   FILEPATH_USER_PROJECT_NAME_FOLDER_PACKAGE_JSON
-   (str/replace (slurp FILEPATH_BASIC_TEMPLATE_PACKAGE_JSON) "*|USER-PROJECT-NAME|*" user-project-name))
+  (append-contents-to-file! (path/join dest_upn_dir "package.json")
+                            (str/replace (slurp (path/join basic_template_dir "package.json")) "*|USER-PROJECT-NAME|*" user-project-name))
 
-  (append-contents-to-file!
-   FILEPATH_PUBLIC_FOLDER_INDEX_HTML
-   (slurp FILEPATH_BASIC_TEMPLATE_PUBLIC_INDEX_HTML))
+  (append-contents-to-file! (path/join dest_upn_dir "public" "index.html")
+                            (slurp (path/join basic_template_dir "public" "index.html")))
 
-  (copy-file FILEPATH_BASIC_TEMPLATE_PUBLIC_IMG_CLJS_SVG FILEPATH_PUBLIC_IMG_FOLDER_CLJS_SVG)
-  (copy-file FILEPATH_BASIC_TEMPLATE_PUBLIC_FAVICON_ICO FILEPATH_PUBLIC_FOLDER_FAVICON_ICO)
-  (copy-file FILEPATH_BASIC_TEMPLATE_PUBLIC_LOGO_192_PNG FILEPATH_PUBLIC_FOLDER_LOGO_192_PNG)
-  (copy-file FILEPATH_BASIC_TEMPLATE_PUBLIC_LOGO_512_PNG FILEPATH_PUBLIC_FOLDER_LOGO_512_PNG)
-  (copy-file FILEPATH_BASIC_TEMPLATE_PUBLIC_MANIFEST_JSON FILEPATH_PUBLIC_FOLDER_MANIFEST_JSON)
-  (copy-file FILEPATH_BASIC_TEMPLATE_PUBLIC_ROBOTS_TXT FILEPATH_PUBLIC_FOLDER_ROBOTS_TXT)
+  (copy-file (path/join basic_template_dir "public" "img" "cljs.svg")
+             (path/join dest_upn_dir       "public" "img" "cljs.svg"))
 
-  (append-contents-to-file!
-   FILEPATH_PUBLIC_CSS_FOLDER_STYLE_CSS
-   (slurp FILEPATH_BASIC_TEMPLATE_PUBLIC_CSS_STYLE_CSS))
+  (copy-file (path/join basic_template_dir "public" "favicon.ico")
+             (path/join dest_upn_dir       "public" "favicon.ico"))
 
-  (append-contents-to-file!
-   FILEPATH_SRC_UPN_APP_FOLDER_CORE_CLJS
-   (str/replace (slurp FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_CORE_CLJS) "*|USER-PROJECT-NAME|*" user-project-name))
+  (copy-file (path/join basic_template_dir "public" "cljs_logo_192.png")
+             (path/join dest_upn_dir       "public" "cljs_logo_192.png"))
 
-  (append-contents-to-file!
-   FILEPATH_SRC_UPN_APP_VIEWS_FOLDER_ASIDE_CLJS
-   (str/replace (slurp FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_VIEWS_ASIDE_CLJS) "*|USER-PROJECT-NAME|*" user-project-name))
+  (copy-file (path/join basic_template_dir "public" "cljs_logo_512.png")
+             (path/join dest_upn_dir       "public" "cljs_logo_512.png"))
 
-  (append-contents-to-file!
-   FILEPATH_SRC_UPN_APP_VIEWS_FOLDER_COUNTER_CLJS
-   (str/replace (slurp FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_VIEWS_COUNTER_CLJS) "*|USER-PROJECT-NAME|*" user-project-name))
+  (copy-file (path/join basic_template_dir "public" "manifest.json")
+             (path/join dest_upn_dir       "public" "manifest.json"))
 
-  (append-contents-to-file!
-   FILEPATH_SRC_UPN_APP_VIEWS_FOLDER_DESCRIPTION_CLJS
-   (str/replace (slurp FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_VIEWS_DESCRIPTION_CLJS) "*|USER-PROJECT-NAME|*" user-project-name))
+  (copy-file (path/join basic_template_dir "public" "robots.txt")
+             (path/join dest_upn_dir       "public" "robots.txt"))
 
-  (append-contents-to-file!
-   FILEPATH_SRC_UPN_APP_VIEWS_FOLDER_HEADER_CLJS
-   (str/replace (slurp FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_VIEWS_HEADER_CLJS) "*|USER-PROJECT-NAME|*" user-project-name))
+  (append-contents-to-file! (path/join dest_upn_dir              "public" "css" "style.css")
+                            (slurp (path/join basic_template_dir "public" "css" "style.css")))
 
-  ;; Create `.gitignore` file and its contents without slurping
-  (append-contents-to-file!
-   FILEPATH_USER_PROJECT_NAME_FOLDER_DOT_GITIGNORE
-   (contents/gitignore-file-contents)))
+  (append-contents-to-file! (path/join dest_upn_dir                           "src" u_p_n    "app" "core.cljs")
+                            (str/replace (slurp (path/join basic_template_dir "src" "my_app" "app" "core.cljs"))
+                                         "*|USER-PROJECT-NAME|*" user-project-name))
+
+  (append-contents-to-file! (path/join dest_upn_dir                           "src" u_p_n    "app" "views" "aside.cljs")
+                            (str/replace (slurp (path/join basic_template_dir "src" "my_app" "app" "views" "aside.cljs"))
+                                         "*|USER-PROJECT-NAME|*" user-project-name))
+
+  (append-contents-to-file! (path/join dest_upn_dir                           "src" u_p_n    "app" "views" "counter.cljs")
+                            (str/replace (slurp (path/join basic_template_dir "src" "my_app" "app" "views" "counter.cljs"))
+                                         "*|USER-PROJECT-NAME|*" user-project-name))
+
+  (append-contents-to-file! (path/join dest_upn_dir                           "src" u_p_n    "app" "views" "description.cljs")
+                            (str/replace (slurp (path/join basic_template_dir "src" "my_app" "app" "views" "description.cljs"))
+                                         "*|USER-PROJECT-NAME|*" user-project-name))
+
+  (append-contents-to-file! (path/join dest_upn_dir                           "src" u_p_n    "app" "views" "header.cljs")
+                            (str/replace (slurp (path/join basic_template_dir "src" "my_app" "app" "views" "header.cljs"))
+                                         "*|USER-PROJECT-NAME|*" user-project-name))
+
+  ;; Create `.gitignore` file and its contents without slurping, since it is excluded during `npm publish`
+  (append-contents-to-file! (path/join dest_upn_dir ".gitignore")
+                            (contents/gitignore-file-contents)))
 
 ;; --- Run ---
 
