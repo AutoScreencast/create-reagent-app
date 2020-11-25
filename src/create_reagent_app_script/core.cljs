@@ -2,13 +2,15 @@
   (:require [clojure.string :as str]
             [clojure.tools.cli :refer [parse-opts]]
             [cljs-node-io.core :refer [slurp]]
-            [fs :refer [existsSync mkdirSync appendFileSync]]
+            [fs :refer [existsSync mkdirSync appendFileSync copyFileSync]]
             [path]
             [create-reagent-app-script.contents :as contents]))
 
-(def cli-options [;; Specification of --css flag requires an argument, such as `tailwindcss`, otherwise defaults to `basic`
-                  ["-c" "--css CSS-Library" "CSS Library, for example: tailwindcss"
+(def cli-options [["-c" "--css CSS-LIBRARY" "CSS library, for example: tailwindcss"
                    :default "basic"
+                   :parse-fn #(str %)]
+                  ["-p" "--package-manager PACKAGE-MANAGER" "Package Manager, for example: yarn. Defaults to: npm."
+                   :default "npm"
                    :parse-fn #(str %)]
                   ["-h" "--help" "Usage Help"]])
 
@@ -25,6 +27,9 @@
 ; (if (= (-> argv-map :options :css) "tailwindcss")
 ;   (println "OOOOOH! You want to use tailwindcss. Good stuff!")
 ;   (println "Falling back on basic CSS."))
+
+;; Get the user's preferred package manager (npm or yarn):
+(def pm (-> argv-map :options :package-manager))
 
 ;; __dirname: "/Users/username/.npm/_npx/ddddd..dd/node_modules/create-reagent-app/bin"
 ;; Remove the final "/bin" from the __dirname
@@ -73,11 +78,16 @@
        (print))
   (js/process.exit 1))
 
-;; Constant filepaths (excluding the `.gitignore` file, which is excluded during `npm publish`)
+;; Constant origin filepaths (excluding the `.gitignore` file, which is excluded during `npm publish`)
 
 (def FILEPATH_BASIC_TEMPLATE_SHADOW_CLJS_EDN          (str BASE_FOLDER "/templates/basic/shadow-cljs.edn"))
 (def FILEPATH_BASIC_TEMPLATE_PACKAGE_JSON             (str BASE_FOLDER "/templates/basic/package.json"))
 (def FILEPATH_BASIC_TEMPLATE_PUBLIC_INDEX_HTML        (str BASE_FOLDER "/templates/basic/public/index.html"))
+(def FILEPATH_BASIC_TEMPLATE_PUBLIC_FAVICON_ICO       (str BASE_FOLDER "/templates/basic/public/favicon.ico"))
+(def FILEPATH_BASIC_TEMPLATE_PUBLIC_LOGO_192_PNG      (str BASE_FOLDER "/templates/basic/public/cljs_logo_192.png"))
+(def FILEPATH_BASIC_TEMPLATE_PUBLIC_LOGO_512_PNG      (str BASE_FOLDER "/templates/basic/public/cljs_logo_512.png"))
+(def FILEPATH_BASIC_TEMPLATE_PUBLIC_MANIFEST_JSON     (str BASE_FOLDER "/templates/basic/public/manifest.json"))
+(def FILEPATH_BASIC_TEMPLATE_PUBLIC_ROBOTS_TXT        (str BASE_FOLDER "/templates/basic/public/robots.txt"))
 (def FILEPATH_BASIC_TEMPLATE_PUBLIC_CSS_STYLE_CSS     (str BASE_FOLDER "/templates/basic/public/css/style.css"))
 (def FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_CORE_CLJS (str BASE_FOLDER "/templates/basic/src/my_app/app/core.cljs"))
 
@@ -93,6 +103,9 @@
 
 (defn append-contents-to-file! [filepath contents]
   (appendFileSync filepath contents))
+
+(defn copy-file [origin destination]
+  (copyFileSync origin destination))
 
 ;; --- Linear sequence of steps ---
 
@@ -118,6 +131,11 @@
 (def FILEPATH_USER_PROJECT_NAME_FOLDER_PACKAGE_JSON    (path/join FILEPATH_USER_PROJECT_NAME_FOLDER "package.json"))
 (def FILEPATH_USER_PROJECT_NAME_FOLDER_DOT_GITIGNORE   (path/join FILEPATH_USER_PROJECT_NAME_FOLDER ".gitignore"))
 (def FILEPATH_PUBLIC_FOLDER_INDEX_HTML                 (path/join FILEPATH_PUBLIC_FOLDER "index.html"))
+(def FILEPATH_PUBLIC_FOLDER_FAVICON_ICO                (path/join FILEPATH_PUBLIC_FOLDER "favicon.ico"))
+(def FILEPATH_PUBLIC_FOLDER_LOGO_192_PNG               (path/join FILEPATH_PUBLIC_FOLDER "cljs_logo_192.png"))
+(def FILEPATH_PUBLIC_FOLDER_LOGO_512_PNG               (path/join FILEPATH_PUBLIC_FOLDER "cljs_logo_512.png"))
+(def FILEPATH_PUBLIC_FOLDER_MANIFEST_JSON              (path/join FILEPATH_PUBLIC_FOLDER "manifest.json"))
+(def FILEPATH_PUBLIC_FOLDER_ROBOTS_TXT                 (path/join FILEPATH_PUBLIC_FOLDER "robots.txt"))
 (def FILEPATH_PUBLIC_CSS_FOLDER_STYLE_CSS              (path/join FILEPATH_PUBLIC_CSS_FOLDER "style.css"))
 (def FILEPATH_SRC_UPN_APP_FOLDER_CORE_CLJS             (path/join FILEPATH_SRC_UPN_APP_FOLDER "core.cljs"))
 
@@ -134,6 +152,12 @@
   (append-contents-to-file!
    FILEPATH_PUBLIC_FOLDER_INDEX_HTML
    (slurp FILEPATH_BASIC_TEMPLATE_PUBLIC_INDEX_HTML))
+
+  (copy-file FILEPATH_BASIC_TEMPLATE_PUBLIC_FAVICON_ICO FILEPATH_PUBLIC_FOLDER_FAVICON_ICO)
+  (copy-file FILEPATH_BASIC_TEMPLATE_PUBLIC_LOGO_192_PNG FILEPATH_PUBLIC_FOLDER_LOGO_192_PNG)
+  (copy-file FILEPATH_BASIC_TEMPLATE_PUBLIC_LOGO_512_PNG FILEPATH_PUBLIC_FOLDER_LOGO_512_PNG)
+  (copy-file FILEPATH_BASIC_TEMPLATE_PUBLIC_MANIFEST_JSON FILEPATH_PUBLIC_FOLDER_MANIFEST_JSON)
+  (copy-file FILEPATH_BASIC_TEMPLATE_PUBLIC_ROBOTS_TXT FILEPATH_PUBLIC_FOLDER_ROBOTS_TXT)
 
   (append-contents-to-file!
    FILEPATH_PUBLIC_CSS_FOLDER_STYLE_CSS
@@ -154,12 +178,17 @@
   (->> [""
         (str "========================== CREATE REAGENT APP v" cra-version-number " ==========================")
         ""
-        (str "Your app `" user-project-name "` was successfully created. Now perform these 4 steps:")
+        (str
+         "Your app `" user-project-name "` was successfully created. Now perform these 4 steps:")
         ""
-        (str "1. Change directory into project folder:   `cd " user-project-name "`")
-        "2. Install dependencies using npm or yarn: `npm install` or `yarn install`"
-        "3. Run app with:                           `npm start`   or `yarn start`"
-        "4. Open your browser at:                   `localhost:3000`"
+        (str
+         "1. Change directory into project folder: `cd " user-project-name "`")
+        (str
+         "2. Install dependencies:                 `" pm " install`")
+        (str
+         "3. Run app:                              `" pm " start`")
+        (str
+         "4. Open your browser at:                 `localhost:3000`")
         ""
         "================================================================================"
         ""]
