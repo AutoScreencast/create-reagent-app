@@ -89,6 +89,7 @@
 (def FILEPATH_BASIC_TEMPLATE_PUBLIC_MANIFEST_JSON                  (str BASE_FOLDER "/templates/basic/public/manifest.json"))
 (def FILEPATH_BASIC_TEMPLATE_PUBLIC_ROBOTS_TXT                     (str BASE_FOLDER "/templates/basic/public/robots.txt"))
 (def FILEPATH_BASIC_TEMPLATE_PUBLIC_CSS_STYLE_CSS                  (str BASE_FOLDER "/templates/basic/public/css/style.css"))
+(def FILEPATH_BASIC_TEMPLATE_PUBLIC_IMG_CLJS_SVG                   (str BASE_FOLDER "/templates/basic/public/img/cljs.svg"))
 (def FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_CORE_CLJS              (str BASE_FOLDER "/templates/basic/src/my_app/app/core.cljs"))
 (def FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_VIEWS_ASIDE_CLJS       (str BASE_FOLDER "/templates/basic/src/my_app/app/views/aside.cljs"))
 (def FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_VIEWS_COUNTER_CLJS     (str BASE_FOLDER "/templates/basic/src/my_app/app/views/counter.cljs"))
@@ -117,6 +118,7 @@
 (def FILEPATH_USER_PROJECT_NAME_FOLDER (path/resolve user-project-name))
 (def FILEPATH_PUBLIC_FOLDER            (path/join FILEPATH_USER_PROJECT_NAME_FOLDER "public"))
 (def FILEPATH_PUBLIC_CSS_FOLDER        (path/join FILEPATH_PUBLIC_FOLDER "css"))
+(def FILEPATH_PUBLIC_IMG_FOLDER        (path/join FILEPATH_PUBLIC_FOLDER "img"))
 (def FILEPATH_SRC_FOLDER               (path/join FILEPATH_USER_PROJECT_NAME_FOLDER "src"))
 (def FILEPATH_SRC_UPN_FOLDER           (path/join FILEPATH_SRC_FOLDER (replace-hyphens-with-underscores user-project-name)))
 (def FILEPATH_SRC_UPN_APP_FOLDER       (path/join FILEPATH_SRC_UPN_FOLDER "app"))
@@ -127,6 +129,7 @@
   (maybe-create-folder! FILEPATH_USER_PROJECT_NAME_FOLDER)
   (maybe-create-folder! FILEPATH_PUBLIC_FOLDER)
   (maybe-create-folder! FILEPATH_PUBLIC_CSS_FOLDER)
+  (maybe-create-folder! FILEPATH_PUBLIC_IMG_FOLDER)
   (maybe-create-folder! FILEPATH_SRC_FOLDER)
   (maybe-create-folder! FILEPATH_SRC_UPN_FOLDER)
   (maybe-create-folder! FILEPATH_SRC_UPN_APP_FOLDER)
@@ -143,13 +146,14 @@
 (def FILEPATH_PUBLIC_FOLDER_MANIFEST_JSON               (path/join FILEPATH_PUBLIC_FOLDER "manifest.json"))
 (def FILEPATH_PUBLIC_FOLDER_ROBOTS_TXT                  (path/join FILEPATH_PUBLIC_FOLDER "robots.txt"))
 (def FILEPATH_PUBLIC_CSS_FOLDER_STYLE_CSS               (path/join FILEPATH_PUBLIC_CSS_FOLDER "style.css"))
+(def FILEPATH_PUBLIC_IMG_FOLDER_CLJS_SVG                (path/join FILEPATH_PUBLIC_IMG_FOLDER "cljs.svg"))
 (def FILEPATH_SRC_UPN_APP_FOLDER_CORE_CLJS              (path/join FILEPATH_SRC_UPN_APP_FOLDER "core.cljs"))
 (def FILEPATH_SRC_UPN_APP_VIEWS_FOLDER_ASIDE_CLJS       (path/join FILEPATH_SRC_UPN_APP_VIEWS_FOLDER "aside.cljs"))
 (def FILEPATH_SRC_UPN_APP_VIEWS_FOLDER_COUNTER_CLJS     (path/join FILEPATH_SRC_UPN_APP_VIEWS_FOLDER "counter.cljs"))
 (def FILEPATH_SRC_UPN_APP_VIEWS_FOLDER_DESCRIPTION_CLJS (path/join FILEPATH_SRC_UPN_APP_VIEWS_FOLDER "description.cljs"))
 (def FILEPATH_SRC_UPN_APP_VIEWS_FOLDER_HEADER_CLJS      (path/join FILEPATH_SRC_UPN_APP_VIEWS_FOLDER "header.cljs"))
 
-;; Create files with content
+;; Create or copy files with content
 (defn create-files-with-content! []
   (append-contents-to-file!
    FILEPATH_USER_PROJECT_NAME_FOLDER_SHADOW_CLJS_EDN
@@ -163,6 +167,7 @@
    FILEPATH_PUBLIC_FOLDER_INDEX_HTML
    (slurp FILEPATH_BASIC_TEMPLATE_PUBLIC_INDEX_HTML))
 
+  (copy-file FILEPATH_BASIC_TEMPLATE_PUBLIC_IMG_CLJS_SVG FILEPATH_PUBLIC_IMG_FOLDER_CLJS_SVG)
   (copy-file FILEPATH_BASIC_TEMPLATE_PUBLIC_FAVICON_ICO FILEPATH_PUBLIC_FOLDER_FAVICON_ICO)
   (copy-file FILEPATH_BASIC_TEMPLATE_PUBLIC_LOGO_192_PNG FILEPATH_PUBLIC_FOLDER_LOGO_192_PNG)
   (copy-file FILEPATH_BASIC_TEMPLATE_PUBLIC_LOGO_512_PNG FILEPATH_PUBLIC_FOLDER_LOGO_512_PNG)
