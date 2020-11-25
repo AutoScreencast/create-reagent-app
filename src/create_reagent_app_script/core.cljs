@@ -80,16 +80,20 @@
 
 ;; Constant origin filepaths (excluding the `.gitignore` file, which is excluded during `npm publish`)
 
-(def FILEPATH_BASIC_TEMPLATE_SHADOW_CLJS_EDN          (str BASE_FOLDER "/templates/basic/shadow-cljs.edn"))
-(def FILEPATH_BASIC_TEMPLATE_PACKAGE_JSON             (str BASE_FOLDER "/templates/basic/package.json"))
-(def FILEPATH_BASIC_TEMPLATE_PUBLIC_INDEX_HTML        (str BASE_FOLDER "/templates/basic/public/index.html"))
-(def FILEPATH_BASIC_TEMPLATE_PUBLIC_FAVICON_ICO       (str BASE_FOLDER "/templates/basic/public/favicon.ico"))
-(def FILEPATH_BASIC_TEMPLATE_PUBLIC_LOGO_192_PNG      (str BASE_FOLDER "/templates/basic/public/cljs_logo_192.png"))
-(def FILEPATH_BASIC_TEMPLATE_PUBLIC_LOGO_512_PNG      (str BASE_FOLDER "/templates/basic/public/cljs_logo_512.png"))
-(def FILEPATH_BASIC_TEMPLATE_PUBLIC_MANIFEST_JSON     (str BASE_FOLDER "/templates/basic/public/manifest.json"))
-(def FILEPATH_BASIC_TEMPLATE_PUBLIC_ROBOTS_TXT        (str BASE_FOLDER "/templates/basic/public/robots.txt"))
-(def FILEPATH_BASIC_TEMPLATE_PUBLIC_CSS_STYLE_CSS     (str BASE_FOLDER "/templates/basic/public/css/style.css"))
-(def FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_CORE_CLJS (str BASE_FOLDER "/templates/basic/src/my_app/app/core.cljs"))
+(def FILEPATH_BASIC_TEMPLATE_SHADOW_CLJS_EDN                       (str BASE_FOLDER "/templates/basic/shadow-cljs.edn"))
+(def FILEPATH_BASIC_TEMPLATE_PACKAGE_JSON                          (str BASE_FOLDER "/templates/basic/package.json"))
+(def FILEPATH_BASIC_TEMPLATE_PUBLIC_INDEX_HTML                     (str BASE_FOLDER "/templates/basic/public/index.html"))
+(def FILEPATH_BASIC_TEMPLATE_PUBLIC_FAVICON_ICO                    (str BASE_FOLDER "/templates/basic/public/favicon.ico"))
+(def FILEPATH_BASIC_TEMPLATE_PUBLIC_LOGO_192_PNG                   (str BASE_FOLDER "/templates/basic/public/cljs_logo_192.png"))
+(def FILEPATH_BASIC_TEMPLATE_PUBLIC_LOGO_512_PNG                   (str BASE_FOLDER "/templates/basic/public/cljs_logo_512.png"))
+(def FILEPATH_BASIC_TEMPLATE_PUBLIC_MANIFEST_JSON                  (str BASE_FOLDER "/templates/basic/public/manifest.json"))
+(def FILEPATH_BASIC_TEMPLATE_PUBLIC_ROBOTS_TXT                     (str BASE_FOLDER "/templates/basic/public/robots.txt"))
+(def FILEPATH_BASIC_TEMPLATE_PUBLIC_CSS_STYLE_CSS                  (str BASE_FOLDER "/templates/basic/public/css/style.css"))
+(def FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_CORE_CLJS              (str BASE_FOLDER "/templates/basic/src/my_app/app/core.cljs"))
+(def FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_VIEWS_ASIDE_CLJS       (str BASE_FOLDER "/templates/basic/src/my_app/app/views/aside.cljs"))
+(def FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_VIEWS_COUNTER_CLJS     (str BASE_FOLDER "/templates/basic/src/my_app/app/views/counter.cljs"))
+(def FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_VIEWS_DESCRIPTION_CLJS (str BASE_FOLDER "/templates/basic/src/my_app/app/views/description.cljs"))
+(def FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_VIEWS_HEADER_CLJS      (str BASE_FOLDER "/templates/basic/src/my_app/app/views/header.cljs"))
 
 ;; Utility Functions
 
@@ -116,6 +120,7 @@
 (def FILEPATH_SRC_FOLDER               (path/join FILEPATH_USER_PROJECT_NAME_FOLDER "src"))
 (def FILEPATH_SRC_UPN_FOLDER           (path/join FILEPATH_SRC_FOLDER (replace-hyphens-with-underscores user-project-name)))
 (def FILEPATH_SRC_UPN_APP_FOLDER       (path/join FILEPATH_SRC_UPN_FOLDER "app"))
+(def FILEPATH_SRC_UPN_APP_VIEWS_FOLDER (path/join FILEPATH_SRC_UPN_APP_FOLDER "views"))
 
 ;; Create folders
 (defn create-folders! []
@@ -124,20 +129,25 @@
   (maybe-create-folder! FILEPATH_PUBLIC_CSS_FOLDER)
   (maybe-create-folder! FILEPATH_SRC_FOLDER)
   (maybe-create-folder! FILEPATH_SRC_UPN_FOLDER)
-  (maybe-create-folder! FILEPATH_SRC_UPN_APP_FOLDER))
+  (maybe-create-folder! FILEPATH_SRC_UPN_APP_FOLDER)
+  (maybe-create-folder! FILEPATH_SRC_UPN_APP_VIEWS_FOLDER))
 
 ;; Output files
-(def FILEPATH_USER_PROJECT_NAME_FOLDER_SHADOW_CLJS_EDN (path/join FILEPATH_USER_PROJECT_NAME_FOLDER "shadow-cljs.edn"))
-(def FILEPATH_USER_PROJECT_NAME_FOLDER_PACKAGE_JSON    (path/join FILEPATH_USER_PROJECT_NAME_FOLDER "package.json"))
-(def FILEPATH_USER_PROJECT_NAME_FOLDER_DOT_GITIGNORE   (path/join FILEPATH_USER_PROJECT_NAME_FOLDER ".gitignore"))
-(def FILEPATH_PUBLIC_FOLDER_INDEX_HTML                 (path/join FILEPATH_PUBLIC_FOLDER "index.html"))
-(def FILEPATH_PUBLIC_FOLDER_FAVICON_ICO                (path/join FILEPATH_PUBLIC_FOLDER "favicon.ico"))
-(def FILEPATH_PUBLIC_FOLDER_LOGO_192_PNG               (path/join FILEPATH_PUBLIC_FOLDER "cljs_logo_192.png"))
-(def FILEPATH_PUBLIC_FOLDER_LOGO_512_PNG               (path/join FILEPATH_PUBLIC_FOLDER "cljs_logo_512.png"))
-(def FILEPATH_PUBLIC_FOLDER_MANIFEST_JSON              (path/join FILEPATH_PUBLIC_FOLDER "manifest.json"))
-(def FILEPATH_PUBLIC_FOLDER_ROBOTS_TXT                 (path/join FILEPATH_PUBLIC_FOLDER "robots.txt"))
-(def FILEPATH_PUBLIC_CSS_FOLDER_STYLE_CSS              (path/join FILEPATH_PUBLIC_CSS_FOLDER "style.css"))
-(def FILEPATH_SRC_UPN_APP_FOLDER_CORE_CLJS             (path/join FILEPATH_SRC_UPN_APP_FOLDER "core.cljs"))
+(def FILEPATH_USER_PROJECT_NAME_FOLDER_SHADOW_CLJS_EDN  (path/join FILEPATH_USER_PROJECT_NAME_FOLDER "shadow-cljs.edn"))
+(def FILEPATH_USER_PROJECT_NAME_FOLDER_PACKAGE_JSON     (path/join FILEPATH_USER_PROJECT_NAME_FOLDER "package.json"))
+(def FILEPATH_USER_PROJECT_NAME_FOLDER_DOT_GITIGNORE    (path/join FILEPATH_USER_PROJECT_NAME_FOLDER ".gitignore"))
+(def FILEPATH_PUBLIC_FOLDER_INDEX_HTML                  (path/join FILEPATH_PUBLIC_FOLDER "index.html"))
+(def FILEPATH_PUBLIC_FOLDER_FAVICON_ICO                 (path/join FILEPATH_PUBLIC_FOLDER "favicon.ico"))
+(def FILEPATH_PUBLIC_FOLDER_LOGO_192_PNG                (path/join FILEPATH_PUBLIC_FOLDER "cljs_logo_192.png"))
+(def FILEPATH_PUBLIC_FOLDER_LOGO_512_PNG                (path/join FILEPATH_PUBLIC_FOLDER "cljs_logo_512.png"))
+(def FILEPATH_PUBLIC_FOLDER_MANIFEST_JSON               (path/join FILEPATH_PUBLIC_FOLDER "manifest.json"))
+(def FILEPATH_PUBLIC_FOLDER_ROBOTS_TXT                  (path/join FILEPATH_PUBLIC_FOLDER "robots.txt"))
+(def FILEPATH_PUBLIC_CSS_FOLDER_STYLE_CSS               (path/join FILEPATH_PUBLIC_CSS_FOLDER "style.css"))
+(def FILEPATH_SRC_UPN_APP_FOLDER_CORE_CLJS              (path/join FILEPATH_SRC_UPN_APP_FOLDER "core.cljs"))
+(def FILEPATH_SRC_UPN_APP_VIEWS_FOLDER_ASIDE_CLJS       (path/join FILEPATH_SRC_UPN_APP_VIEWS_FOLDER "aside.cljs"))
+(def FILEPATH_SRC_UPN_APP_VIEWS_FOLDER_COUNTER_CLJS     (path/join FILEPATH_SRC_UPN_APP_VIEWS_FOLDER "counter.cljs"))
+(def FILEPATH_SRC_UPN_APP_VIEWS_FOLDER_DESCRIPTION_CLJS (path/join FILEPATH_SRC_UPN_APP_VIEWS_FOLDER "description.cljs"))
+(def FILEPATH_SRC_UPN_APP_VIEWS_FOLDER_HEADER_CLJS      (path/join FILEPATH_SRC_UPN_APP_VIEWS_FOLDER "header.cljs"))
 
 ;; Create files with content
 (defn create-files-with-content! []
@@ -166,6 +176,22 @@
   (append-contents-to-file!
    FILEPATH_SRC_UPN_APP_FOLDER_CORE_CLJS
    (str/replace (slurp FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_CORE_CLJS) "*|USER-PROJECT-NAME|*" user-project-name))
+
+  (append-contents-to-file!
+   FILEPATH_SRC_UPN_APP_VIEWS_FOLDER_ASIDE_CLJS
+   (str/replace (slurp FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_VIEWS_ASIDE_CLJS) "*|USER-PROJECT-NAME|*" user-project-name))
+
+  (append-contents-to-file!
+   FILEPATH_SRC_UPN_APP_VIEWS_FOLDER_COUNTER_CLJS
+   (str/replace (slurp FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_VIEWS_COUNTER_CLJS) "*|USER-PROJECT-NAME|*" user-project-name))
+
+  (append-contents-to-file!
+   FILEPATH_SRC_UPN_APP_VIEWS_FOLDER_DESCRIPTION_CLJS
+   (str/replace (slurp FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_VIEWS_DESCRIPTION_CLJS) "*|USER-PROJECT-NAME|*" user-project-name))
+
+  (append-contents-to-file!
+   FILEPATH_SRC_UPN_APP_VIEWS_FOLDER_HEADER_CLJS
+   (str/replace (slurp FILEPATH_BASIC_TEMPLATE_SRC_MY_APP_APP_VIEWS_HEADER_CLJS) "*|USER-PROJECT-NAME|*" user-project-name))
 
   ;; Create `.gitignore` file and its contents without slurping
   (append-contents-to-file!
