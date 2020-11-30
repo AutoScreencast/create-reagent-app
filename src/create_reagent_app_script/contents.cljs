@@ -13,6 +13,7 @@ report.html
 
 # generated js
 /public/js
+/out
 
 # misc
 .DS_Store

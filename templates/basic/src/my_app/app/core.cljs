@@ -10,6 +10,14 @@
 
 (defonce counter (r/atom 0))  ;; Use `defonce` to preserve atom value across hot reloads
 
+;; --- Utility Functions ---
+
+(defn incrementer! [r]
+  (swap! r inc))
+
+(defn decrementer! [r]
+  (swap! r dec))
+
 ;; --- App Component ---
 
 (defn app []
@@ -18,8 +26,8 @@
    [description]
    [aside]
    [counter-component {:counter (str @counter)
-                       :inc-fn #(swap! counter inc)
-                       :dec-fn #(swap! counter dec)}]])
+                       :inc-fn #(incrementer! counter)
+                       :dec-fn #(decrementer! counter)}]])
 
 ;; --- Render App ---
 

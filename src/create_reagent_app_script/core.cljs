@@ -110,7 +110,8 @@
   (maybe-create-folder! (path/join dest_upn_dir "src"))
   (maybe-create-folder! (path/join dest_upn_dir "src" u_p_n))
   (maybe-create-folder! (path/join dest_upn_dir "src" u_p_n "app"))
-  (maybe-create-folder! (path/join dest_upn_dir "src" u_p_n "app" "views")))
+  (maybe-create-folder! (path/join dest_upn_dir "src" u_p_n "app" "views"))
+  (maybe-create-folder! (path/join dest_upn_dir "src" u_p_n "test")))
 
 ;; Origin filepath
 
@@ -167,6 +168,10 @@
 
   (append-contents-to-file! (path/join dest_upn_dir                           "src" u_p_n    "app" "views" "header.cljs")
                             (str/replace (slurp (path/join basic_template_dir "src" "my_app" "app" "views" "header.cljs"))
+                                         "*|USER-PROJECT-NAME|*" user-project-name))
+
+  (append-contents-to-file! (path/join dest_upn_dir                           "src" u_p_n    "test" "core_test.cljs")
+                            (str/replace (slurp (path/join basic_template_dir "src" "my_app" "test" "core_test.cljs"))
                                          "*|USER-PROJECT-NAME|*" user-project-name))
 
   ;; Create `.gitignore` file and its contents without slurping, since it is excluded during `npm publish`

@@ -38,16 +38,6 @@ cd my-app
 
 Note: This step creates a `node_modules` folder with all the dependencies in your project folder. You can use either `yarn` or `npm` as your package manager.
 
-#### Yarn
-
-```
-yarn install
-```
-
-Note: Creates a `yarn.lock` file in your project folder.
-
-#### npm
-
 ```
 npm install
 ```
@@ -55,16 +45,6 @@ npm install
 Note: Creates a `package-lock.json` file in your project folder.
 
 ### 4. Start the App
-
-Using either `yarn` or `npm`:
-
-#### Yarn
-
-```
-yarn start
-```
-
-#### npm
 
 ```
 npm start
@@ -87,14 +67,6 @@ Then open http://localhost:3000/ in your browser to see your app.
 This will compile the app in development mode, and watch for any changes in your code.
 Open [http://localhost:3000](http://localhost:3000) to view the app in the browser.
 
-#### Yarn
-
-```
-yarn start
-```
-
-#### npm
-
 ```
 npm start
 ```
@@ -104,14 +76,6 @@ This operation creates a `.shadow-cljs` folder in your project folder.
 ### Build Release Version of App
 
 This compiles the app in production mode, using `:advanced` compilation settings. The finished build (under `public/js`) will be in the `public` folder, which can be deployed.
-
-#### Yarn
-
-```
-yarn build
-```
-
-#### npm
 
 ```
 npm run build
@@ -123,14 +87,6 @@ This operation creates a `.shadow-cljs` folder in your project folder.
 
 Sometimes you may run into some release issues due to `:advanced` compilation. These command may help you track down the causes.
 
-#### Yarn
-
-```
-yarn debug-build
-```
-
-#### npm
-
 ```
 npm run debug-build
 ```
@@ -138,14 +94,6 @@ npm run debug-build
 ### Show Detailed Build Report of Release Version of App
 
 A detailed build report will be shown in your CLI, and a `report.html` file will be created in your project folder.
-
-#### Yarn
-
-```
-yarn report
-```
-
-#### npm
 
 ```
 npm run report
@@ -155,14 +103,6 @@ npm run report
 
 This will serve your finished build (from doing a production build via `yarn build` or `npm run build`, or from doing a development build via `yarn devbuild` or `npm run devbuild`) on [http://localhost:5000](http://localhost:5000) in your browser.
 
-#### Yarn
-
-```
-yarn serve
-```
-
-#### npm
-
 ```
 npm run serve
 ```
@@ -170,14 +110,6 @@ npm run serve
 ### Build Development Version of App
 
 This compiles the app in developent mode once and then exits. The finished build will be in the `public` folder. This command does _not_ watch your code for changes (use `yarn start` or `npm start` to build the app in development mode _and_ watch for changes).
-
-#### Yarn
-
-```
-yarn dev-build
-```
-
-#### npm
 
 ```
 npm run dev-build
@@ -191,14 +123,6 @@ From a different Terminal, connect to a browser REPL for your specific build (on
 
 See [this section](https://shadow-cljs.github.io/docs/UsersGuide.html#build-repl) of the Shadow-CLJS documentation for more details.
 
-#### Yarn
-
-```
-yarn repl
-```
-
-#### npm
-
 ```
 npm run repl
 ```
@@ -208,14 +132,6 @@ npm run repl
 This starts a blank CLJS REPL and will open an associated browser window where the code will execute. It is not connected to any specific build target. Since it is not connected to any build it does not do any automatic rebuilding of code when your files change and does not provide hot-reload. If you close the browser window the REPL will stop working.
 
 See [this section](https://shadow-cljs.github.io/docs/UsersGuide.html#browser-repl) of the Shadow-CLJS documentation for more details.
-
-#### Yarn
-
-```
-yarn browser-repl
-```
-
-#### npm
 
 ```
 npm run browser-repl
@@ -227,29 +143,33 @@ A Clojure REPL is also provided in addition to the provided ClojureScript REPLs.
 
 See [this section](https://shadow-cljs.github.io/docs/UsersGuide.html#_clojure_repl) of the Shadow-CLJS documentation for more details.
 
-#### Yarn
-
-```
-yarn clojure-repl
-```
-
-#### npm
-
 ```
 npm run clojure-repl
 ```
 
+### Compile tests and watch for changes
+
+(Run in a separate Terminal.) This runs the tests and watches them for changes, re-running when a change is detected.
+
+```
+npm test
+```
+
+Note: Creates an `out` folder in your project folder, containing a `node-tests.js` file.
+
+### Compile tests and run them once
+
+(Run in a separate Terminal.) This runs the tests once and then exits. This command does _not_ watch your tests for changes (use `npm test` to run tests _and_ watch for changes).
+
+```
+npm run test-once
+```
+
+Note: Creates an `out` folder in your project folder, containing a `node-tests.js` file.
+
 ### Remove Generated JS Code (“Clean”)
 
 Remove (“clean”) the `public/js` folder and contents generated during compilation.
-
-#### Yarn
-
-```
-yarn clean
-```
-
-#### npm
 
 ```
 npm run clean
@@ -262,35 +182,20 @@ Remove all (“nuke”) of the following:
 - `public/js` folder and contents
 - `.shadow-cljs` folder and contents
 - `node_modules` folder and contents
-- `yarn.lock` or `package-lock.json` file
-
-#### Yarn
-
-```
-yarn nuke
-```
-
-#### npm
+- `package-lock.json` file (or `yarn.lock` file, if you specified the `yarn` option for your package manager)
+- `out` folder and contents (containing tests)
 
 ```
 npm run nuke
 ```
 
-Note that after this operation you will need to run `yarn install` or `npm install` again before starting the app, to re-install the dependencies.
+Note that after this operation you will need to run `npm install` again before starting the app, to re-install the dependencies.
 
 ### Run a Shadow-CLJS Server
 
 Shadow-CLJS can be fairly slow to start. To improve this Shadow-CLJS can run in “server mode” which means that a dedicated process is started which all other commands can use to execute a lot faster since they won’t have to start a new JVM/Clojure instance.
 
 You can run the process in the foreground in a dedicated Terminal. Use CTRL+C to terminate the server.
-
-#### Yarn
-
-```
-yarn shadow-cljs-server
-```
-
-#### npm
 
 ```
 npm run shadow-cljs-server

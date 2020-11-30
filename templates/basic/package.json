@@ -12,8 +12,10 @@
     "repl": "shadow-cljs cljs-repl app",
     "browser-repl": "shadow-cljs browser-repl",
     "clojure-repl": "shadow-cljs clj-repl",
+    "test": "shadow-cljs watch test",
+    "test-once": "shadow-cljs compile test",
     "clean": "rimraf public/js",
-    "nuke": "rimraf public/js .shadow-cljs node_modules yarn.lock package-lock.json",
+    "nuke": "rimraf public/js .shadow-cljs node_modules yarn.lock package-lock.json out",
     "shadow-cljs-server": "shadow-cljs server"
   },
   "devDependencies": {
