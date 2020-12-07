@@ -13,13 +13,14 @@
   ],
   "license": "MIT",
   "homepage": "https://github.com/AutoScreencast/create-reagent-app#readme",
-  "version": "0.0.42",
+  "version": "0.0.43",
   "private": false,
   "bin": {
     "create-reagent-app": "bin/index.js"
   },
   "files": [
-    "templates/basic/"
+    "templates/basic/",
+    "templates/basic-example/"
   ],
   "engines": {
     "node": ">=10"
