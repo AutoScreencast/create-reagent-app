@@ -1,4 +1,4 @@
-(ns *|USER-PROJECT-NAME|*.test.core-test
+(ns *|USER-PROJECT-NAME|*.app.core-test
   (:require [cljs.test :refer [deftest is testing]]
             [reagent.core :as r]
             [*|USER-PROJECT-NAME|*.app.core :refer [incrementer! decrementer!]]))

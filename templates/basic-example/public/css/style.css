@@ -1,0 +1,80 @@
+/* Edit these styles */
+
+/* Reset */
+html {
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+* {
+  box-sizing: inherit;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ol,
+ul {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+}
+
+/* App */
+.wrapper {
+  padding: 2rem;
+}
+
+.counter {
+  padding: 3rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+button {
+  border: none;
+  border-radius: 1rem;
+  color: white;
+  text-align: center;
+  padding: 2rem 3rem;
+  text-decoration: none;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+button:focus {
+  outline: thin dotted;
+}
+
+.inc {
+  background-color: rgba(0, 140, 186, 1); /* Blue */
+}
+
+.inc:hover {
+  background-color: rgba(0, 140, 186, 0.8);
+}
+
+.dec {
+  background-color: rgba(244, 67, 54, 1); /* Red */
+}
+
+.dec:hover {
+  background-color: rgba(244, 67, 54, 0.8);
+}
+
+.val {
+  font-size: 6rem;
+  font-weight: lighter;
+  text-align: center;
+  width: 12rem;
+  height: 8rem;
+}

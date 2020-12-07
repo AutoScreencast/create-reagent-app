@@ -2,24 +2,30 @@
   (:require [clojure.string :as str]
             [clojure.tools.cli :refer [parse-opts]]
             [cljs-node-io.core :refer [slurp]]
-            [fs :refer [existsSync mkdirSync appendFileSync copyFileSync]]
             [path]
+            [create-reagent-app-script.utils :refer [maybe-create-folder!
+                                                     replace-hyphens-with-underscores
+                                                     append-contents-to-file!
+                                                     copy-file]]
             [create-reagent-app-script.contents :as contents]))
 
 (def cli-options [["-c" "--css CSS-LIBRARY" "CSS library, for example: tailwindcss"
                    :default "basic"
                    :parse-fn #(str %)]
-                  ["-p" "--package-manager PACKAGE-MANAGER" "Package Manager, for example: yarn. Defaults to: npm."
+                  ["-p" "--package-manager PACKAGE-MANAGER" "Package manager, for example: yarn. Defaults to: npm."
                    :default "npm"
                    :parse-fn #(str %)]
-                  ["-h" "--help" "Usage Help"]])
+                  ["-x" "--example" "Version of template with example code and comments"]
+                  ["-h" "--help" "Usage help"]])
 
 (def argv-map (parse-opts (js->clj js/process.argv) cli-options))
+
+; (println "argv-map" argv-map)
 
 ;; Get imput command line arguments from Node process
 (def user-specified-args (subvec (:arguments argv-map) 2))
 
-;; eg. "my-app"
+;; eg. "my-project"
 (def user-project-name (str (first user-specified-args)))
 
 ;; Get CSS Library...
@@ -68,29 +74,13 @@
         "  `npx create-reagent-app <your-project-name>`"
         ""
         "For example:"
-        "  `npx create-reagent-app my-app`"
+        "  `npx create-reagent-app my-project`"
         ""
         "================================================================================"
         ""]
        (str/join \newline)
        (print))
   (js/process.exit 1))
-
-;; Utility Functions
-
-(defn maybe-create-folder! [folder-name]
-  (if (not (existsSync folder-name))
-    (mkdirSync folder-name)
-    (js/console.error (str "The folder " folder-name " already exists."))))
-
-(defn replace-hyphens-with-underscores [folder-name]
-  (str/replace folder-name \- \_))
-
-(defn append-contents-to-file! [filepath contents]
-  (appendFileSync filepath contents))
-
-(defn copy-file [origin destination]
-  (copyFileSync origin destination))
 
 ;; --- Linear sequence of steps ---
 
@@ -100,87 +90,94 @@
 
 (def u_p_n (replace-hyphens-with-underscores user-project-name))
 
-;; Create folders
+;; Create project
 
-(defn create-folders! []
-  (maybe-create-folder! dest_upn_dir)
-  (maybe-create-folder! (path/join dest_upn_dir "public"))
-  (maybe-create-folder! (path/join dest_upn_dir "public" "css"))
-  (maybe-create-folder! (path/join dest_upn_dir "public" "img"))
-  (maybe-create-folder! (path/join dest_upn_dir "src"))
-  (maybe-create-folder! (path/join dest_upn_dir "src" u_p_n))
-  (maybe-create-folder! (path/join dest_upn_dir "src" u_p_n "app"))
-  (maybe-create-folder! (path/join dest_upn_dir "src" u_p_n "app" "views"))
-  (maybe-create-folder! (path/join dest_upn_dir "src" u_p_n "test")))
+(defn create-project! [template]
+  (let [template_dir (case template
+                       "basic-example" (path/join orig_base_dir "templates" "basic-example")
+                       "basic"         (path/join orig_base_dir "templates" "basic"))]
+  ; Create folders
+    (maybe-create-folder! dest_upn_dir)
+    (maybe-create-folder! (path/join dest_upn_dir "public"))
+    (maybe-create-folder! (path/join dest_upn_dir "public" "css"))
+    (maybe-create-folder! (path/join dest_upn_dir "public" "img"))
+    (maybe-create-folder! (path/join dest_upn_dir "src"))
+    (maybe-create-folder! (path/join dest_upn_dir "src" "main"))
+    (maybe-create-folder! (path/join dest_upn_dir "src" "main" u_p_n))
+    (maybe-create-folder! (path/join dest_upn_dir "src" "main" u_p_n "app"))
+    (when (= template "basic-example")
+      (maybe-create-folder! (path/join dest_upn_dir "src" "main" u_p_n "app" "views")))
+    (maybe-create-folder! (path/join dest_upn_dir "src" "test"))
+    (maybe-create-folder! (path/join dest_upn_dir "src" "test" u_p_n))
+    (maybe-create-folder! (path/join dest_upn_dir "src" "test" u_p_n "app"))
 
-;; Origin filepath
+  ;; Create or copy files with content
+    (append-contents-to-file! (path/join dest_upn_dir "shadow-cljs.edn")
+                              (str/replace (slurp (path/join template_dir "shadow-cljs.edn")) "*|USER-PROJECT-NAME|*" user-project-name))
 
-(def basic_template_dir  (path/join orig_base_dir "templates" "basic"))
+    (append-contents-to-file! (path/join dest_upn_dir "package.json")
+                              (str/replace (slurp (path/join template_dir "package.json")) "*|USER-PROJECT-NAME|*" user-project-name))
 
-;; Create or copy files with content
+    (append-contents-to-file! (path/join dest_upn_dir "public" "index.html")
+                              (slurp (path/join template_dir "public" "index.html")))
 
-(defn create-files-with-content! []
-  (append-contents-to-file! (path/join dest_upn_dir "shadow-cljs.edn")
-                            (str/replace (slurp (path/join basic_template_dir "shadow-cljs.edn")) "*|USER-PROJECT-NAME|*" user-project-name))
+    (copy-file (path/join template_dir "public" "img" "cljs.svg")
+               (path/join dest_upn_dir "public" "img" "cljs.svg"))
 
-  (append-contents-to-file! (path/join dest_upn_dir "package.json")
-                            (str/replace (slurp (path/join basic_template_dir "package.json")) "*|USER-PROJECT-NAME|*" user-project-name))
+    (copy-file (path/join template_dir "public" "favicon.ico")
+               (path/join dest_upn_dir "public" "favicon.ico"))
 
-  (append-contents-to-file! (path/join dest_upn_dir "public" "index.html")
-                            (slurp (path/join basic_template_dir "public" "index.html")))
+    (copy-file (path/join template_dir "public" "cljs_logo_192.png")
+               (path/join dest_upn_dir "public" "cljs_logo_192.png"))
 
-  (copy-file (path/join basic_template_dir "public" "img" "cljs.svg")
-             (path/join dest_upn_dir       "public" "img" "cljs.svg"))
+    (copy-file (path/join template_dir "public" "cljs_logo_512.png")
+               (path/join dest_upn_dir "public" "cljs_logo_512.png"))
 
-  (copy-file (path/join basic_template_dir "public" "favicon.ico")
-             (path/join dest_upn_dir       "public" "favicon.ico"))
+    (copy-file (path/join template_dir "public" "manifest.json")
+               (path/join dest_upn_dir "public" "manifest.json"))
 
-  (copy-file (path/join basic_template_dir "public" "cljs_logo_192.png")
-             (path/join dest_upn_dir       "public" "cljs_logo_192.png"))
+    (copy-file (path/join template_dir "public" "robots.txt")
+               (path/join dest_upn_dir "public" "robots.txt"))
 
-  (copy-file (path/join basic_template_dir "public" "cljs_logo_512.png")
-             (path/join dest_upn_dir       "public" "cljs_logo_512.png"))
+    (append-contents-to-file! (path/join dest_upn_dir        "public" "css" "style.css")
+                              (slurp (path/join template_dir "public" "css" "style.css")))
 
-  (copy-file (path/join basic_template_dir "public" "manifest.json")
-             (path/join dest_upn_dir       "public" "manifest.json"))
+    (append-contents-to-file! (path/join dest_upn_dir                     "src" "main" u_p_n        "app" "core.cljs")
+                              (str/replace (slurp (path/join template_dir "src" "main" "my_project" "app" "core.cljs"))
+                                           "*|USER-PROJECT-NAME|*" user-project-name))
 
-  (copy-file (path/join basic_template_dir "public" "robots.txt")
-             (path/join dest_upn_dir       "public" "robots.txt"))
+    (when (= template "basic-example")
+      (append-contents-to-file! (path/join dest_upn_dir                     "src" "main" u_p_n        "app" "views" "aside.cljs")
+                                (str/replace (slurp (path/join template_dir "src" "main" "my_project" "app" "views" "aside.cljs"))
+                                             "*|USER-PROJECT-NAME|*" user-project-name))
 
-  (append-contents-to-file! (path/join dest_upn_dir              "public" "css" "style.css")
-                            (slurp (path/join basic_template_dir "public" "css" "style.css")))
+      (append-contents-to-file! (path/join dest_upn_dir                     "src" "main" u_p_n        "app" "views" "counter.cljs")
+                                (str/replace (slurp (path/join template_dir "src" "main" "my_project" "app" "views" "counter.cljs"))
+                                             "*|USER-PROJECT-NAME|*" user-project-name))
 
-  (append-contents-to-file! (path/join dest_upn_dir                           "src" u_p_n    "app" "core.cljs")
-                            (str/replace (slurp (path/join basic_template_dir "src" "my_app" "app" "core.cljs"))
-                                         "*|USER-PROJECT-NAME|*" user-project-name))
+      (append-contents-to-file! (path/join dest_upn_dir                     "src" "main" u_p_n        "app" "views" "description.cljs")
+                                (str/replace (slurp (path/join template_dir "src" "main" "my_project" "app" "views" "description.cljs"))
+                                             "*|USER-PROJECT-NAME|*" user-project-name))
 
-  (append-contents-to-file! (path/join dest_upn_dir                           "src" u_p_n    "app" "views" "aside.cljs")
-                            (str/replace (slurp (path/join basic_template_dir "src" "my_app" "app" "views" "aside.cljs"))
-                                         "*|USER-PROJECT-NAME|*" user-project-name))
+      (append-contents-to-file! (path/join dest_upn_dir                     "src" "main" u_p_n        "app" "views" "header.cljs")
+                                (str/replace (slurp (path/join template_dir "src" "main" "my_project" "app" "views" "header.cljs"))
+                                             "*|USER-PROJECT-NAME|*" user-project-name)))
 
-  (append-contents-to-file! (path/join dest_upn_dir                           "src" u_p_n    "app" "views" "counter.cljs")
-                            (str/replace (slurp (path/join basic_template_dir "src" "my_app" "app" "views" "counter.cljs"))
-                                         "*|USER-PROJECT-NAME|*" user-project-name))
+    (append-contents-to-file! (path/join dest_upn_dir                     "src" "test" u_p_n        "app" "core_test.cljs")
+                              (str/replace (slurp (path/join template_dir "src" "test" "my_project" "app" "core_test.cljs"))
+                                           "*|USER-PROJECT-NAME|*" user-project-name))
 
-  (append-contents-to-file! (path/join dest_upn_dir                           "src" u_p_n    "app" "views" "description.cljs")
-                            (str/replace (slurp (path/join basic_template_dir "src" "my_app" "app" "views" "description.cljs"))
-                                         "*|USER-PROJECT-NAME|*" user-project-name))
+  ;; Create `.gitignore` and `README.md` files and their contents without slurping, since they are excluded during `npm publish`
+    (append-contents-to-file! (path/join dest_upn_dir ".gitignore")
+                              (contents/gitignore-file-contents))
 
-  (append-contents-to-file! (path/join dest_upn_dir                           "src" u_p_n    "app" "views" "header.cljs")
-                            (str/replace (slurp (path/join basic_template_dir "src" "my_app" "app" "views" "header.cljs"))
-                                         "*|USER-PROJECT-NAME|*" user-project-name))
+    (append-contents-to-file! (path/join dest_upn_dir "README.md")
+                              (contents/readme-file-contents))))
 
-  (append-contents-to-file! (path/join dest_upn_dir                           "src" u_p_n    "test" "core_test.cljs")
-                            (str/replace (slurp (path/join basic_template_dir "src" "my_app" "test" "core_test.cljs"))
-                                         "*|USER-PROJECT-NAME|*" user-project-name))
-
-  ;; Create `.gitignore` file and its contents without slurping, since it is excluded during `npm publish`
-  (append-contents-to-file! (path/join dest_upn_dir ".gitignore")
-                            (contents/gitignore-file-contents)))
 
 ;; --- Run ---
 
-(defn print-following-steps! []
+(defn print-following-steps! [cra-version-number user-project-name package-manager]
   (->> [""
         (str "========================== CREATE REAGENT APP v" cra-version-number " ==========================")
         ""
@@ -190,9 +187,9 @@
         (str
          "1. Change directory into project folder: `cd " user-project-name "`")
         (str
-         "2. Install dependencies:                 `" pm " install`")
+         "2. Install dependencies:                 `" package-manager " install`")
         (str
-         "3. Run app:                              `" pm " start`")
+         "3. Run app:                              `" package-manager " start`")
         (str
          "4. Open your browser at:                 `localhost:3000`")
         ""
@@ -202,9 +199,10 @@
        (println)))
 
 (defn ^:export main []
-  (create-folders!)
-  (create-files-with-content!)
-  (print-following-steps!))
+  (if (:example (:options argv-map))
+    (create-project! "basic-example")
+    (create-project! "basic"))
+  (print-following-steps! cra-version-number user-project-name pm))
 
 (defn ^:dev/after-load reload! []
   (println "reload!"))
