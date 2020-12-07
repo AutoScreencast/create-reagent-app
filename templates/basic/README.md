@@ -18,20 +18,20 @@ Create your app in 5 easy steps:
 
 Note that [npx](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b) comes with npm 5.2+ and higher.
 
-To create a project called `my-app`, run this command in your Terminal:
+To create a project called `my-project`, run this command in your Terminal:
 
 ```
-npx create-reagent-app my-app
+npx create-reagent-app my-project
 ```
 
-This will create a folder (in your current working directory) called `my-app`, with the bootstrapped app as its contents.
+This will create a folder (in your current working directory) called `my-project`, with the bootstrapped app as its contents.
 
 ### 2. Change Directory into Project Folder
 
-Assuming you called your project `my-app`:
+Assuming you called your project `my-project`:
 
 ```
-cd my-app
+cd my-project
 ```
 
 ### 3. Install Dependencies
@@ -60,6 +60,22 @@ Then open http://localhost:3000/ in your browser to see your app.
 
 ---
 
+## Options
+
+Running the following command (without options) creates a project using a **basic template**, without example usage or comments, which is most useful when you need a blank project scaffold:
+
+```
+npx create-reagent-app my-project
+```
+
+You can add the `--example` option to the command to get a **basic template with examples**, which should be useful for developers who are not very familiar with setting up ClojureScript/Reagent projects with Shadow-CLJS. It has example components and plenty of comments:
+
+```
+npx create-reagent-app my-project --example
+```
+
+---
+
 ## Available Scripts
 
 ### Start App
@@ -85,7 +101,7 @@ This operation creates a `.shadow-cljs` folder in your project folder.
 
 ### Debug Release Version of App
 
-Sometimes you may run into some release issues due to `:advanced` compilation. These command may help you track down the causes.
+Sometimes you may run into some release issues due to `:advanced` compilation. The following command may help you track down the causes:
 
 ```
 npm run debug-build
@@ -165,7 +181,7 @@ Note: Creates an `out` folder in your project folder, containing a `node-tests.j
 npm run test-once
 ```
 
-Note: Creates an `out` folder in your project folder, containing a `node-tests.js` file.
+Note: Creates an `out` folder in your project folder.
 
 ### Remove Generated JS Code (“Clean”)
 
@@ -184,6 +200,7 @@ Remove all (“nuke”) of the following:
 - `node_modules` folder and contents
 - `package-lock.json` file (or `yarn.lock` file, if you specified the `yarn` option for your package manager)
 - `out` folder and contents (containing tests)
+- `report.html` file showing release build details
 
 ```
 npm run nuke

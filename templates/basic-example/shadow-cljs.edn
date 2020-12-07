@@ -1,18 +1,29 @@
 {:source-paths
- ["src/main"
-  "src/test"]
+ ["src/main"      ;; your app source files are relative to this source path
+  "src/test"]     ;; your test files are relative to this separate source path
 
  :dependencies
  [[reagent "0.10.0"]]
 
- :dev-http
- {3000 "public"}
+ :dev-http        ;; start a development http server
+ {3000 "public"}  ;; on `http://localhost:3000`
 
  :builds
- {:app  {:target     :browser
-         :output-dir "public/js"
-         :asset-path "/js"
-         :modules    {:main {:init-fn *|USER-PROJECT-NAME|*.app.core/main}}}
-  :test {:target     :node-test
-         :output-to  "out/node-tests.js"
-         :autorun    true}}}
+ {:app         ;; this is the `build-id` used in shadow-cljs commands, e.g. `shadow-cljs watch app`
+  {:target     :browser
+   :output-dir "public/js"
+   :asset-path "/js"
+   :modules
+   {:main      ;; <- becomes `public/js/main.js`
+    {:init-fn  *|USER-PROJECT-NAME|*.app.core/main}}}  ;; relative to the "src/main" source path
+
+  :test
+  {:target     :node-test
+   :output-to  "out/node-tests.js"
+   :autorun    true}
+
+  :test-browser
+  {:target     :browser-test
+   :test-dir   "out/browser/test"
+   :devtools   {:http-port        3021
+                :http-root        "out/browser/test"}}}}

@@ -9,9 +9,9 @@
                                                      copy-file]]
             [create-reagent-app-script.contents :as contents]))
 
-(def cli-options [["-c" "--css CSS-LIBRARY" "CSS library, for example: tailwindcss"
-                   :default "basic"
-                   :parse-fn #(str %)]
+(def cli-options [; ["-c" "--css CSS-LIBRARY" "CSS library, for example: tailwindcss"
+                  ;  :default "basic"
+                  ;  :parse-fn #(str %)]
                   ["-p" "--package-manager PACKAGE-MANAGER" "Package manager, for example: yarn. Defaults to: npm."
                    :default "npm"
                    :parse-fn #(str %)]
@@ -100,16 +100,21 @@
     (maybe-create-folder! dest_upn_dir)
     (maybe-create-folder! (path/join dest_upn_dir "public"))
     (maybe-create-folder! (path/join dest_upn_dir "public" "css"))
-    (maybe-create-folder! (path/join dest_upn_dir "public" "img"))
+    (when (= template "basic-example")
+      (maybe-create-folder! (path/join dest_upn_dir "public" "img")))
+
     (maybe-create-folder! (path/join dest_upn_dir "src"))
     (maybe-create-folder! (path/join dest_upn_dir "src" "main"))
     (maybe-create-folder! (path/join dest_upn_dir "src" "main" u_p_n))
     (maybe-create-folder! (path/join dest_upn_dir "src" "main" u_p_n "app"))
     (when (= template "basic-example")
       (maybe-create-folder! (path/join dest_upn_dir "src" "main" u_p_n "app" "views")))
+
     (maybe-create-folder! (path/join dest_upn_dir "src" "test"))
     (maybe-create-folder! (path/join dest_upn_dir "src" "test" u_p_n))
     (maybe-create-folder! (path/join dest_upn_dir "src" "test" u_p_n "app"))
+    (when (= template "basic-example")
+      (maybe-create-folder! (path/join dest_upn_dir "src" "test" u_p_n "app" "views")))
 
   ;; Create or copy files with content
     (append-contents-to-file! (path/join dest_upn_dir "shadow-cljs.edn")
@@ -121,8 +126,9 @@
     (append-contents-to-file! (path/join dest_upn_dir "public" "index.html")
                               (slurp (path/join template_dir "public" "index.html")))
 
-    (copy-file (path/join template_dir "public" "img" "cljs.svg")
-               (path/join dest_upn_dir "public" "img" "cljs.svg"))
+    (when (= template "basic-example")
+      (copy-file (path/join template_dir "public" "img" "cljs.svg")
+                 (path/join dest_upn_dir "public" "img" "cljs.svg")))
 
     (copy-file (path/join template_dir "public" "favicon.ico")
                (path/join dest_upn_dir "public" "favicon.ico"))
@@ -167,7 +173,24 @@
                               (str/replace (slurp (path/join template_dir "src" "test" "my_project" "app" "core_test.cljs"))
                                            "*|USER-PROJECT-NAME|*" user-project-name))
 
-  ;; Create `.gitignore` and `README.md` files and their contents without slurping, since they are excluded during `npm publish`
+    (when (= template "basic-example")
+      (append-contents-to-file! (path/join dest_upn_dir                     "src" "test" u_p_n        "app" "views" "aside_test.cljs")
+                                (str/replace (slurp (path/join template_dir "src" "test" "my_project" "app" "views" "aside_test.cljs"))
+                                             "*|USER-PROJECT-NAME|*" user-project-name))
+
+      (append-contents-to-file! (path/join dest_upn_dir                     "src" "test" u_p_n        "app" "views" "counter_test.cljs")
+                                (str/replace (slurp (path/join template_dir "src" "test" "my_project" "app" "views" "counter_test.cljs"))
+                                             "*|USER-PROJECT-NAME|*" user-project-name))
+
+      (append-contents-to-file! (path/join dest_upn_dir                     "src" "test" u_p_n        "app" "views" "description_test.cljs")
+                                (str/replace (slurp (path/join template_dir "src" "test" "my_project" "app" "views" "description_test.cljs"))
+                                             "*|USER-PROJECT-NAME|*" user-project-name))
+
+      (append-contents-to-file! (path/join dest_upn_dir                     "src" "test" u_p_n        "app" "views" "header_test.cljs")
+                                (str/replace (slurp (path/join template_dir "src" "test" "my_project" "app" "views" "header_test.cljs"))
+                                             "*|USER-PROJECT-NAME|*" user-project-name)))
+
+    ;; Create `.gitignore` and `README.md` files and their contents without slurping, since they are excluded during `npm publish`
     (append-contents-to-file! (path/join dest_upn_dir ".gitignore")
                               (contents/gitignore-file-contents))
 
