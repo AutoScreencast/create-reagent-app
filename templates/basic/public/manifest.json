@@ -1,6 +1,6 @@
 {
-  "short_name": "Reagent App",
-  "name": "Create Reagent App Sample",
+  "short_name": "*|USER-PROJECT-NAME|*",
+  "name": "*|USER-PROJECT-NAME|*",
   "icons": [
     {
       "src": "favicon.ico",

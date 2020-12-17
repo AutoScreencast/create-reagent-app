@@ -15,3 +15,21 @@
 
 (defn copy-file [origin destination]
   (copyFileSync origin destination))
+
+(defn capitalize-words-and-remove-hyphens
+  "Capitalize every word in a string, and convert hyphens to space"
+  [s]
+  (let [capitalized-words (->> (str/split (str s) #"\b")
+                               (map str/capitalize)
+                               str/join)]
+    (str/replace capitalized-words "-" " ")))
+
+(defn name-starts-with-number?
+  "Check to see if the first character of a string is a number"
+  [s]
+  (->> s
+       str
+       first
+       js/parseInt
+       js/Number.isNaN ; if false, then the string starts with a number
+       not))

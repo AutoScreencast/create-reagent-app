@@ -6,7 +6,9 @@
             [create-reagent-app-script.utils :refer [maybe-create-folder!
                                                      replace-hyphens-with-underscores
                                                      append-contents-to-file!
-                                                     copy-file]]
+                                                     copy-file
+                                                     capitalize-words-and-remove-hyphens
+                                                     name-starts-with-number?]]
             [create-reagent-app-script.contents :as contents]))
 
 (def cli-options [; ["-c" "--css CSS-LIBRARY" "CSS library, for example: tailwindcss"
@@ -27,6 +29,20 @@
 
 ;; eg. "my-project"
 (def user-project-name (str (first user-specified-args)))
+
+;; Exit from process if project name starts with a number
+(when (name-starts-with-number? user-project-name)
+  (->> [""
+        "================= THERE IS A PROBLEM !!! PLEASE TRY AGAIN !!! =================="
+        ""
+        "The project name cannot start with a number."
+        "Please select a project name that starts with a letter."
+        ""
+        "================================================================================"
+        ""]
+       (str/join \newline)
+       (print))
+  (js/process.exit 1))
 
 ;; Get CSS Library...
 ; (if (= (-> argv-map :options :css) "tailwindcss")
@@ -124,7 +140,9 @@
                               (str/replace (slurp (path/join template_dir "package.json")) "*|USER-PROJECT-NAME|*" user-project-name))
 
     (append-contents-to-file! (path/join dest_upn_dir "public" "index.html")
-                              (slurp (path/join template_dir "public" "index.html")))
+                              (str/replace (slurp (path/join template_dir "public" "index.html"))
+                                           "*|USER-PROJECT-NAME|*"
+                                           (capitalize-words-and-remove-hyphens user-project-name)))
 
     (when (= template "basic-example")
       (copy-file (path/join template_dir "public" "img" "cljs.svg")
@@ -139,8 +157,10 @@
     (copy-file (path/join template_dir "public" "cljs_logo_512.png")
                (path/join dest_upn_dir "public" "cljs_logo_512.png"))
 
-    (copy-file (path/join template_dir "public" "manifest.json")
-               (path/join dest_upn_dir "public" "manifest.json"))
+    (append-contents-to-file! (path/join dest_upn_dir "public" "manifest.json")
+                              (str/replace (slurp (path/join template_dir "public" "manifest.json"))
+                                           "*|USER-PROJECT-NAME|*"
+                                           (capitalize-words-and-remove-hyphens user-project-name)))
 
     (copy-file (path/join template_dir "public" "robots.txt")
                (path/join dest_upn_dir "public" "robots.txt"))
