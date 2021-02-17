@@ -151,11 +151,11 @@
     (copy-file (path/join template_dir "public" "favicon.ico")
                (path/join dest_upn_dir "public" "favicon.ico"))
 
-    (copy-file (path/join template_dir "public" "cljs_logo_192.png")
-               (path/join dest_upn_dir "public" "cljs_logo_192.png"))
+    (copy-file (path/join template_dir "public" "logo192.png")
+               (path/join dest_upn_dir "public" "logo192.png"))
 
-    (copy-file (path/join template_dir "public" "cljs_logo_512.png")
-               (path/join dest_upn_dir "public" "cljs_logo_512.png"))
+    (copy-file (path/join template_dir "public" "logo512.png")
+               (path/join dest_upn_dir "public" "logo512.png"))
 
     (append-contents-to-file! (path/join dest_upn_dir "public" "manifest.json")
                               (str/replace (slurp (path/join template_dir "public" "manifest.json"))

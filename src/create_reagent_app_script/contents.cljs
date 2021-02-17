@@ -20,6 +20,8 @@ report.html
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+/.clj-kondo
+/.lsp
 ")
 
 (defn readme-file-contents []

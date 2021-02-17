@@ -3,22 +3,27 @@
   "src/test"]
 
  :dependencies
- [[reagent "0.10.0"]]
+ [[reagent            "1.0.0"]
+  [binaryage/devtools "1.0.2"]]
 
  :dev-http
  {3000 "public"}
 
  :builds
- {:app          {:target     :browser
-                 :output-dir "public/js"
-                 :asset-path "/js"
-                 :modules    {:main        {:init-fn *|USER-PROJECT-NAME|*.app.core/main}}}
+ {:app
+  {:target     :browser
+   :output-dir "public/js"
+   :asset-path "/js"
+   :modules    {:main
+                {:init-fn *|USER-PROJECT-NAME|*.app.core/main}}}
 
-  :test         {:target     :node-test
-                 :output-to  "out/node/tests.js"
-                 :autorun    true}
+  :test
+  {:target     :node-test
+   :output-to  "out/node/tests.js"
+   :autorun    true}
 
-  :test-browser {:target     :browser-test
-                 :test-dir   "out/browser/test"
-                 :devtools   {:http-port   3021
-                              :http-root   "out/browser/test"}}}}
+  :test-browser
+  {:target     :browser-test
+   :test-dir   "out/browser/test"
+   :devtools   {:http-port 3021
+                :http-root "out/browser/test"}}}}
